@@ -34,7 +34,7 @@ public class OnOffSwitch extends SubsystemBase {
   }
 
   public boolean isActivated(){
-    return m_normallyOpen ? m_digitalInput.get() : !m_digitalInput.get();
+    return m_normallyOpen ? !m_digitalInput.get() : m_digitalInput.get();
   }
 
   public String getName(){
