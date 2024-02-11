@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class SparkMaxMotor extends SubsystemBase {
   private final String m_name;
   private final CANSparkMax m_CANSparkMax;
+  private final MotorType m_motorType;
   private final RelativeEncoder m_RelativeEncoder;
   private final SparkPIDController m_SparkPIDController;
   private final double m_encoderRotationsPerFinalRotation;
@@ -39,6 +40,7 @@ public class SparkMaxMotor extends SubsystemBase {
     }
     m_CANSparkMax = new CANSparkMax(canId, motorType);
     m_CANSparkMax.restoreFactoryDefaults();
+    m_motorType = motorType;
     if (motorType == MotorType.kBrushless){
       m_RelativeEncoder = m_CANSparkMax.getEncoder();
     } else if (encoderType != null) {
@@ -49,6 +51,43 @@ public class SparkMaxMotor extends SubsystemBase {
     SmartDashboard.putString("relative encoder type = ", m_RelativeEncoder.toString());
     m_SparkPIDController = m_CANSparkMax.getPIDController();
     setCurrentPositionAsZeroEncoderPosition();
+  }
+
+  /**
+   * @return number of encoder rotations per final rotation for this SparkMaxMotor
+   */
+  public double getEncoderRotationsPerFinalRotation() {
+    return m_encoderRotationsPerFinalRotation;
+  }
+  public MotorType getMotorType(){
+    return m_motorType;
+  }
+  public CANSparkMax getSparkMax(){
+    return m_CANSparkMax;
+  }
+
+  /**
+   * Cause another SparkMaxMotor to get the same voltage as this motor.
+   * This motor will use its set point and feedback from its encoder to set
+   * the voltages for all the followers.  Hence we check that their properties
+   * match pretty closely.  We assume that all the motors have very similar
+   * loads, so the main motor's PID parameters will result in reasonable voltages
+   * for them.
+   * @param follower- the SparkMaxMotor to mimic the this motor's behavior
+   * @param invert- if true, the follower will have the same speed as the main
+   * motor but in the opposite direction (use this when motors are at opposite
+   * ends of a shaft).  If false the velocities will be identical.
+   * @throws Exception- it is a fatal error if the encoder rotations per final
+   * rotation or the motor types don't match.
+   */
+  public void addFollower(SparkMaxMotor follower, boolean invert) throws Exception{
+    if (follower.getEncoderRotationsPerFinalRotation() != getEncoderRotationsPerFinalRotation()) {
+      throw new Exception("follower's encoder rotations per final rotation must match the leader's");
+    }
+    if (follower.getMotorType() != getMotorType()){
+      throw new Exception("follower's motor type must match the leader's");
+    }
+    follower.getSparkMax().follow(m_CANSparkMax, invert);
   }
 
   /**
