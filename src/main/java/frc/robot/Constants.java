@@ -3,6 +3,7 @@ package frc.robot;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -136,7 +137,7 @@ public final class Constants {
     }
 
     public static final class AutoConstants { //TODO: The below constants are used in the example auto, and must be tuned to specific robot
-         public static final double kMaxSpeedMetersPerSecond = 0.5;
+        public static final double kMaxSpeedMetersPerSecond = 0.5;
         public static final double kMaxAccelerationMetersPerSecondSquared = 1;
         public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
         public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
@@ -149,5 +150,57 @@ public final class Constants {
         public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
             new TrapezoidProfile.Constraints(
                 kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+    }
+    /**
+     * Info regarding the two shooter motors: REV Neo's running in opposite directions.
+     */
+    public static final class ShooterConstants{
+        public static final MotorType kMotorType = MotorType.kBrushless;
+        public static final double encoderRotationsPerFinalRotation = 1.0;
+        public static final class Left {
+            public static final int kCANId = 11;
+            public static final String kName = "Left Shooter";
+        }
+        public static final class Right {
+            public static final int kCANId = 53;
+            public static final String kName = "Right Shooter";
+        }
+        public static final class PID {
+            // velocity PID values
+            public static final double kP = 0.000100;
+            public static final double kI = 0.000000;
+            public static final double kD = 0.000000;
+            public static final double kFeedForward = 0.000170 * 1.07;
+            public static final double kIZone = 0.000000;
+            public static final double kMinOutput = -1.0;
+            public static final double kMaxOutput = +1.0;
+        }
+    }
+    /**
+     * Info regarding the motors powering the "shoulder", the joint between the chassis and the arm.
+     * There are two motors, one at each end of a shaft, so one will be a follower of the other, in inverted mode.
+     * They are currently REV Neo's with 140:1 planetary gearboxes.
+     */
+    public static final class ShoulderConstants {
+        public static final MotorType kMotorType = MotorType.kBrushless;
+        public static final double encoderRotationsPerFinalRotation = 140.0;
+        public static final class Left{
+            public static final int kCANId = 52;
+            public static final String kName = "Left Shoulder";
+        }
+        public static final class Right{
+            public static final int kCANId = 62;
+            public static final String kName = "Right Shoulder";
+        }
+        public static final class PID {
+            // velocity PID values
+            public static final double kP = 0.000080; // TODO: fill in PID coefficients
+            public static final double kI = 0.000000;
+            public static final double kD = 0.000000;
+            public static final double kFeedForward = 0.000170 * 1;
+            public static final double kIZone = 0.000000;
+            public static final double kMinOutput = -1.0;
+            public static final double kMaxOutput = +1.0;
+        }
     }
 }

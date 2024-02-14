@@ -80,14 +80,15 @@ public class SparkMaxMotor extends SubsystemBase {
    * @throws Exception- it is a fatal error if the encoder rotations per final
    * rotation or the motor types don't match.
    */
-  public void addFollower(SparkMaxMotor follower, boolean invert) throws Exception{
+  public void addFollower(SparkMaxMotor follower, boolean invert){
     if (follower.getEncoderRotationsPerFinalRotation() != getEncoderRotationsPerFinalRotation()) {
-      throw new Exception("follower's encoder rotations per final rotation must match the leader's");
-    }
+      throw new Error("follower's encoder rotations per final rotation must match the leader's");
+    } else
     if (follower.getMotorType() != getMotorType()){
-      throw new Exception("follower's motor type must match the leader's");
+      throw new Error("follower's motor type must match the leader's");
+    } else {
+      follower.getSparkMax().follow(m_CANSparkMax, invert);
     }
-    follower.getSparkMax().follow(m_CANSparkMax, invert);
   }
 
   /**
@@ -149,6 +150,7 @@ public class SparkMaxMotor extends SubsystemBase {
   }
   public void setRPM(double rpm){
     double encoderRpm = rpm * m_encoderRotationsPerFinalRotation;
+    System.out.println("setting desired encoder rpm to " + encoderRpm);
     m_SparkPIDController.setReference(encoderRpm, ControlType.kVelocity);
   }
   // We use encoder-centric PID parameters so we can copy them from test/tuning program
