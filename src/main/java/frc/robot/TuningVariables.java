@@ -41,30 +41,30 @@ public enum TuningVariables {
           Preferences.setDouble(name(), m_defaultValue);
         }
     }
-    /** From flash memory, get the value of this variable */
+    /** From flash memory, get the value of this tuning variable */
     public double get() {
         return Preferences.getDouble(name(), m_defaultValue);
     }
-    /** In flash memory, set this variable to a value */
-    void set(double value) {
+    /** In flash memory, set this tuning variable to a value */
+    public void set(double value) {
         Preferences.setDouble(name(), value);
     }
-    /** In flash memory, set this variable to its default value */
-    void setToDefaultValue() {
+    /** In flash memory, set this tuning variable to its default value */
+    public void setToDefaultValue() {
         set(m_defaultValue);
     }
-    /** In flash memory, set all variables to their default values */
-    static void setAllToDefaultValues() {
+    /** In flash memory, set all tuning variables to their default values */
+    public static void setAllToDefaultValues() {
         for(TuningVariables tv: TuningVariables.values()) {
             tv.setToDefaultValue();
         }
     }
-    /** Remove this variable from flash memory */
-    void remove(){
+    /** Remove this tuning variable from flash memory */
+    public void remove(){
         Preferences.remove(name());
     }
-    /** Remove all variables from flash memory */
-    static void removeAllKnown() {
+    /** Remove all tuning variables from flash memory */
+    public static void removeAllKnown() {
         for(TuningVariables tv : TuningVariables.values()) {
             tv.remove();
         }
