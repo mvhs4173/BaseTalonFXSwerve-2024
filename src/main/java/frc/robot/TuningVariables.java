@@ -23,55 +23,108 @@ import edu.wpi.first.wpilibj.Preferences;
  * must be doubles.
  */
 public enum TuningVariables {
-    // To add a new value, just enter its name and default value to the following list
-    //defaultSpinRate_DegreesPerSecond (40.0),
-    //defaultTravelRate_FeetPerSecond (2.0),
+    // To add a new value, just enter its name and default value to the following command-separated list
+    // Semicolon ends the list.
     debugLevel(1.0), // scale of 0 to 10
 
     // The following bunch are to avoid CAN and other errors when testing the incomplete robot
-    /** 0 (false) means to not create swerve drive object */
-    useSwerve(1),
-    /** 0 (false) means to create and use shooter motors */
-    useShooter(1),
-    /** 0 (false) means to not create wrist motor object */
-    useWrist(1),
-    /** 0 (false) means to not create shoulder motor objects */
-    useShoulder(1),
-    /** 1 (true) means to use driver's Xbox controller object.  If so, it will be in port 0.
-     *  0 (false) means to not create the controller object for swerve drive.
+    /** false means to not create swerve drive object */
+    useSwerve(true),
+    /** false means to create and use shooter motors */
+    useShooter(true),
+    /** false means to not create wrist motor object */
+    useWrist(true),
+    /** false means to not create shoulder motor objects */
+    useShoulder(true),
+    /** true means to use driver's Xbox controller object.  If so, it will be in port 0.
+     *  false means to not create the controller object for swerve drive.
      */
-    useDriveController(1),
-    /** 1 (true) means to use manipulator's Xbox controller.  
+    useDriveController(true),
+    /** true means to use manipulator's Xbox controller.  
      *  If so, it will be lowest numbered available port.
-     *  0 (false) means to not create that controller object.
+     *  false means to not create that controller object.
      */
-    useArmController(1);
+    useArmController(true);
 
 
-    private double m_defaultValue;
+    private double m_defaultValueNumber;
+    private boolean m_defaultValueBoolean;
+    private String m_defaultValueString;
+    enum Type { kNumber, kBoolean, kString; };
+    private Type m_type;
+
     /** Users cannot call an enum constructor directly;
      * Java will call it for each variable listed above.
      * Note the constructor will not change pre-existing
      * values in flash memory.  Use setToDefaultValue or
      * setAllToDefaultValues for that.
      */
-    private TuningVariables(double defaultValue){
-        m_defaultValue = defaultValue;
+    private TuningVariables(double defaultValueNumber){
+        m_defaultValueNumber = defaultValueNumber;
+        m_type = Type.kNumber;
         if (!Preferences.containsKey(name())) {
-          Preferences.setDouble(name(), m_defaultValue);
+          Preferences.setDouble(name(), m_defaultValueNumber);
+        }
+    }
+    private TuningVariables(boolean defaultValueBoolean){
+        m_defaultValueBoolean = defaultValueBoolean;
+        m_type = Type.kBoolean;
+        if (!Preferences.containsKey(name())){
+            Preferences.setBoolean(name(), m_defaultValueBoolean);
+        }
+    }
+    private TuningVariables(String defaultValueString){
+        m_defaultValueString = defaultValueString;
+        m_type = Type.kString;
+        if (!Preferences.containsKey(name())){
+            Preferences.setString(name(), m_defaultValueString);
         }
     }
     /** From flash memory, get the value of this tuning variable */
-    public double get() {
-        return Preferences.getDouble(name(), m_defaultValue);
+    private void checkType(Type type){
+        if (m_type != type){
+            remove();
+            throw new Error("Requested number but TuningVariable." + name() + " is " + m_type);
+        }
+    }
+    public double getNumber(){
+        checkType(Type.kNumber);
+        return Preferences.getDouble(name(), m_defaultValueNumber);
+    }
+    public boolean getBoolean(){
+        checkType(Type.kBoolean);
+        return Preferences.getBoolean(name(), m_defaultValueBoolean);
+    }
+    public String getString(){
+        checkType(Type.kString);
+        return Preferences.getString(name(), m_defaultValueString);
     }
     /** In flash memory, set this tuning variable to a value */
-    public void set(double value) {
+    public void set(double value){
+        checkType(Type.kNumber);
         Preferences.setDouble(name(), value);
+    }
+    public void set(boolean value){
+        checkType(Type.kBoolean);
+        Preferences.setBoolean(name(), value);
+    }
+    public void set(String value){
+        checkType(Type.kString);
+        Preferences.setString(name(), value);
     }
     /** In flash memory, set this tuning variable to its default value */
     public void setToDefaultValue() {
-        set(m_defaultValue);
+        switch(m_type){
+            case kNumber:
+                set(m_defaultValueNumber);
+                break;
+            case kBoolean:
+                set(m_defaultValueBoolean);
+                break;
+            case kString:
+                set(m_defaultValueString);
+                break;
+        }
     }
     /** In flash memory, set all tuning variables to their default values */
     public static void setAllToDefaultValues() {
@@ -88,5 +141,9 @@ public enum TuningVariables {
         for(TuningVariables tv : TuningVariables.values()) {
             tv.remove();
         }
+    }
+    public static void removeAllPreferences(){
+        removeAllKnown();
+        Preferences.removeAll();
     }
 }

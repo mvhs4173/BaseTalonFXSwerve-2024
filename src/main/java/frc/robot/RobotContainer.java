@@ -20,10 +20,10 @@ import frc.robot.subsystems.*;
 public class RobotContainer {
     /* Controllers */
     private final XboxController m_driveController = 
-      TuningVariables.useDriveController.get() != 0 ? new XboxController(0) : null;
+      TuningVariables.useDriveController.getBoolean() ? new XboxController(0) : null;
     private final XboxController m_armController = 
-      TuningVariables.useArmController.get() != 0 
-        ? new XboxController(TuningVariables.useDriveController.get() != 0 ? 1 : 0)
+      TuningVariables.useArmController.getBoolean() 
+        ? new XboxController(TuningVariables.useDriveController.getBoolean() ? 1 : 0)
         : null;
 
     /* Drive Controls */
@@ -36,24 +36,24 @@ public class RobotContainer {
     private final JoystickButton robotCentric = m_driveController != null ? new JoystickButton(m_driveController, XboxController.Button.kLeftBumper.value) : null;
 
     /* Subsystems */
-    private final Swerve s_Swerve = TuningVariables.useSwerve.get() != 0 ? new Swerve() : null; // set s_Swerve to null when testing arm & shooter alone
-    private final Shoulder m_shoulder = TuningVariables.useShoulder.get() != 0 ? new Shoulder() : null;
+    private final Swerve s_Swerve = TuningVariables.useSwerve.getBoolean() ? new Swerve() : null; // set s_Swerve to null when testing arm & shooter alone
+    private final Shoulder m_shoulder = TuningVariables.useShoulder.getBoolean() ? new Shoulder() : null;
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         if (s_Swerve == null){
-            System.out.println("No drivetrain object will be created - check TuningVariables in Smartdashboard");
+            System.out.println("No drivetrain object was created - check TuningVariables in Smartdashboard");
         }
         if (m_shoulder == null){
-            System.out.println("No should motor objects will be created - check TuningVariables in Smartdashboard");
+            System.out.println("No shoulder motor objects were created - check TuningVariables in Smartdashboard");
         }
         if (m_driveController == null){
-            System.out.println("No driver's Xbox controller will be created, arm controller will be in port 0 - check TuningVariabls in Smartdashboard");
+            System.out.println("No driver's Xbox controller was created, arm controller will be in port 0 - check TuningVariabls in Smartdashboard");
         } else {
             System.out.println("Driver's Xbox controller should be attached to port " + m_driveController.getPort());
         }
         if (m_armController == null) {
-            System.out.println("No arm Xbox controller will be created - check TurningVariables in Smartdashboard");
+            System.out.println("No arm Xbox controller was created - check TurningVariables in Smartdashboard");
         } else {
             System.out.println("Note manipulator's Xbox controller should be attached to port " + m_armController.getPort());
         }
@@ -69,7 +69,8 @@ public class RobotContainer {
 
         // Configure the button bindings
         configureButtonBindings();
-        SmartDashboard.putData(new InstantCommand(TuningVariables::removeAllKnown));  
+        SmartDashboard.putData("Remove all preferences", new InstantCommand(TuningVariables::removeAllPreferences)); 
+        SmartDashboard.putData("Set All TuningVariables to default values", new InstantCommand(TuningVariables::setAllToDefaultValues)); 
     }
 
     /**
