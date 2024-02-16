@@ -26,7 +26,27 @@ public enum TuningVariables {
     // To add a new value, just enter its name and default value to the following list
     //defaultSpinRate_DegreesPerSecond (40.0),
     //defaultTravelRate_FeetPerSecond (2.0),
-    debugLevel(1.0); // scale of 0 to 10
+    debugLevel(1.0), // scale of 0 to 10
+
+    // The following bunch are to avoid CAN and other errors when testing the incomplete robot
+    /** 0 (false) means to not create swerve drive object */
+    useSwerve(1),
+    /** 0 (false) means to create and use shooter motors */
+    useShooter(1),
+    /** 0 (false) means to not create wrist motor object */
+    useWrist(1),
+    /** 0 (false) means to not create shoulder motor objects */
+    useShoulder(1),
+    /** 1 (true) means to use driver's Xbox controller object.  If so, it will be in port 0.
+     *  0 (false) means to not create the controller object for swerve drive.
+     */
+    useDriveController(1),
+    /** 1 (true) means to use manipulator's Xbox controller.  
+     *  If so, it will be lowest numbered available port.
+     *  0 (false) means to not create that controller object.
+     */
+    useArmController(1);
+
 
     private double m_defaultValue;
     /** Users cannot call an enum constructor directly;
