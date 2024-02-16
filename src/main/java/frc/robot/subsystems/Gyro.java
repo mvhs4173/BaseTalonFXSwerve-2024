@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.TuningVariables;
 
 public class Gyro extends SubsystemBase {
   /** Creates a new Gyro. */
@@ -116,17 +117,20 @@ public class Gyro extends SubsystemBase {
     var rawPigeonYaw = m_pigeon.getYaw();
     double pigeonYaw = getYawPigeon2();
     var pigeonStatus = rawPigeonYaw.getStatus();
-    SmartDashboard.putNumber("Pigeon Yaw", pigeonYaw);
-    SmartDashboard.putNumber("NavX Yaw", navXYaw);
-    SmartDashboard.putNumber("Gyro Differnce", pigeonYaw - navXYaw);
+    if (TuningVariables.debugLevel.getNumber() >= 4.0) {
+      SmartDashboard.putNumber("Pigeon Yaw", pigeonYaw);
+      SmartDashboard.putNumber("NavX Yaw", navXYaw);
+      SmartDashboard.putNumber("Gyro Differnce", pigeonYaw - navXYaw);
+    }
 
     var pigeonError = m_pigeon.getFaultField();
-    SmartDashboard.putString("Pigeon Error Status", pigeonStatus.toString());
-    SmartDashboard.putString("Pigeon Fault Field", pigeonError.toString());
-    SmartDashboard.putString("rawPigeonYaw", rawPigeonYaw.toString());
-
-    SmartDashboard.putBoolean("Using Pigeon?", m_usePigeon);
-    SmartDashboard.putBoolean("NavX isConnected", m_navX.isConnected());
+    if (TuningVariables.debugLevel.getNumber() >= 4.0){
+      SmartDashboard.putString("Pigeon Error Status", pigeonStatus.toString());
+      SmartDashboard.putString("Pigeon Fault Field", pigeonError.toString());
+      SmartDashboard.putString("rawPigeonYaw", rawPigeonYaw.toString());
+      SmartDashboard.putBoolean("Using Pigeon?", m_usePigeon);
+      SmartDashboard.putBoolean("NavX isConnected", m_navX.isConnected());
+    }
   }
 
 }

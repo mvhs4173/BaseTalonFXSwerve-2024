@@ -15,6 +15,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.TuningVariables;
 
 public class SparkMaxMotor extends SubsystemBase {
   private final String m_name;
@@ -136,10 +137,12 @@ public class SparkMaxMotor extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber(getName() + " pos", getPosition());
-    SmartDashboard.putNumber(getName() + " vel", getVelocity());
-    SmartDashboard.putNumber(getName() + " amps", m_CANSparkMax.getOutputCurrent());
-    SmartDashboard.putNumber(getName() + " desired pos", m_desiredPosition);
+    if (TuningVariables.debugLevel.getNumber() >= 5.0) {
+      SmartDashboard.putNumber(getName() + " pos", getPosition());
+      SmartDashboard.putNumber(getName() + " vel", getVelocity());
+      SmartDashboard.putNumber(getName() + " amps", m_CANSparkMax.getOutputCurrent());
+      SmartDashboard.putNumber(getName() + " desired pos", m_desiredPosition);
+    }
   }
 
   /**

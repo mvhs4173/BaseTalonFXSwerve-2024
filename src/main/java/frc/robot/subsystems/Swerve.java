@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import frc.robot.SwerveModule;
+import frc.robot.TuningVariables;
 import frc.robot.Constants;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -117,13 +118,14 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic(){
         swerveOdometry.update(getGyroYaw(), getModulePositions());
-
-        for(SwerveModule mod : mSwerveMods){
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
-            SmartDashboard.putNumber("Mod" + mod.moduleNumber + "Drive Current", mod.getDriveCurrent());
-            SmartDashboard.putNumber("Mod" + mod.moduleNumber + "Angle Current", mod.getAngleCurrent());    
+        if (TuningVariables.debugLevel.getNumber() >= 5.0){
+            for(SwerveModule mod : mSwerveMods){
+                SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());
+                SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
+                SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
+                SmartDashboard.putNumber("Mod" + mod.moduleNumber + "Drive Current", mod.getDriveCurrent());
+                SmartDashboard.putNumber("Mod" + mod.moduleNumber + "Angle Current", mod.getAngleCurrent());    
+            }
         }
     }
 }
