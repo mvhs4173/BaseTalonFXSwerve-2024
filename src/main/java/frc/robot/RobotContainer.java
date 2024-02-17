@@ -38,7 +38,8 @@ public class RobotContainer {
     /* Subsystems */
     private final Swerve s_Swerve = TuningVariables.useSwerve.getBoolean() ? new Swerve() : null; // set s_Swerve to null when testing arm & shooter alone
     private final Shoulder m_shoulder = TuningVariables.useShoulder.getBoolean() ? new Shoulder() : null;
-
+    private final Shooter m_shooter = TuningVariables.useShooter.getBoolean() ? new Shooter() : null;
+    
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         if (s_Swerve == null){
