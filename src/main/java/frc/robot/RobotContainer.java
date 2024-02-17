@@ -81,7 +81,7 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         /* Driver Buttons */
-        if (s_Swerve != null){
+        if (s_Swerve != null && zeroGyro != null){
           zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
         }
         if (m_armController != null){
