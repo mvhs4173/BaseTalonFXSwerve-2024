@@ -39,7 +39,7 @@ public class RobotContainer {
     private final Swerve s_Swerve = TuningVariables.useSwerve.getBoolean() ? new Swerve() : null; // set s_Swerve to null when testing arm & shooter alone
     private final Shoulder m_shoulder = TuningVariables.useShoulder.getBoolean() ? new Shoulder() : null;
     private final Shooter m_shooter = TuningVariables.useShooter.getBoolean() ? new Shooter() : null;
-    
+    private final Wrist m_wrist = TuningVariables.useWrist.getBoolean() ? new Wrist() : null;
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         if (s_Swerve == null){
@@ -86,6 +86,10 @@ public class RobotContainer {
           zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
         }
         if (m_armController != null){
+            if (m_wrist != null) {
+                new JoystickButton(m_armController, XboxController.Button.kB.value)
+                   .whileTrue(new WristGoToPosition(m_wrist, .5, .15));                
+            }
             if (m_shoulder != null){
                 new JoystickButton(m_armController, XboxController.Button.kLeftBumper.value)
                     .whileTrue(new SetShoulderSpeed(m_shoulder, 5.0)); // 5 rpm => 3.0 seconds to travel 90 degrees
