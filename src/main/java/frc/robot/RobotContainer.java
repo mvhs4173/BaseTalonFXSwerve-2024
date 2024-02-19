@@ -88,7 +88,9 @@ public class RobotContainer {
         if (m_armController != null){
             if (m_wrist != null) {
                 new JoystickButton(m_armController, XboxController.Button.kB.value)
-                   .whileTrue(new WristGoToPosition(m_wrist, .5, .15));                
+                   .onTrue(new WristGoToPosition(m_wrist, 0.5, .20)); 
+                new JoystickButton(m_armController, XboxController.Button.kA.value)
+                   .onTrue(new WristGoToPosition(m_wrist, 0.5, .22));             
             }
             if (m_shoulder != null){
                 new JoystickButton(m_armController, XboxController.Button.kLeftBumper.value)

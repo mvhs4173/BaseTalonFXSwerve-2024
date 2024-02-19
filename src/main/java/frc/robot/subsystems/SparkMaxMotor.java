@@ -80,6 +80,10 @@ public class SparkMaxMotor extends SubsystemBase {
     }
   }
 
+  // TODO: use 	enableSoftLimit​(CANSparkBase.SoftLimitDirection direction, boolean enable)
+  // and 	setSoftLimit​(CANSparkBase.SoftLimitDirection direction, float limit) to limit
+  // position.
+
   /**
    * Cause another SparkMaxMotor to get the same voltage as this motor.
    * This motor will use its set point and feedback from its encoder to set

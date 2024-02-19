@@ -51,6 +51,7 @@ public class Wrist extends SubsystemBase {
     }
     if(false){
     // safety stuff - never continue to go out of bounds.  Need to get direction from controller.
+    // see soft limit stuff to be added to SparkMaxMotor.
     if (getPosition() <= Constants.WristConstants.minSafePosition
       && m_motor.getSparkMax().getAppliedOutput() >= 0) {
         m_percentSpeed = 0;
@@ -60,6 +61,6 @@ public class Wrist extends SubsystemBase {
     }
   }
 
-    m_motor.setPercentSpeed(m_percentSpeed);
+    //m_motor.setPercentSpeed(m_percentSpeed);
   }
 }

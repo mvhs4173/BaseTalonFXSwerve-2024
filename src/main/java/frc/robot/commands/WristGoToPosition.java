@@ -13,6 +13,7 @@ import frc.robot.subsystems.Wrist;
 public class WristGoToPosition extends Command {
   private Wrist m_wrist;
   private double m_percentSpeed;
+  private double m_absoluteValuePercentSpeed;
   private double m_desiredPosition;
   /** Creates a new WristGoToPosition. */
   public WristGoToPosition(Wrist wrist, double absoluteValuePercentSpeed, double desiredPosition) {
@@ -21,22 +22,20 @@ public class WristGoToPosition extends Command {
     }
     m_wrist = wrist;
     m_desiredPosition = desiredPosition;
-    m_percentSpeed = m_desiredPosition > m_wrist.getPosition() ? absoluteValuePercentSpeed : -absoluteValuePercentSpeed;
+    m_absoluteValuePercentSpeed = absoluteValuePercentSpeed;
     addRequirements(m_wrist);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_percentSpeed = m_desiredPosition > m_wrist.getPosition() ? m_absoluteValuePercentSpeed : -m_absoluteValuePercentSpeed;
     m_wrist.setPercentSpeed(m_percentSpeed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    System.out.println("%speed="+m_percentSpeed+", at "+ m_wrist.getPosition()
-    +", to"+m_desiredPosition);
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
@@ -50,7 +49,6 @@ public class WristGoToPosition extends Command {
     boolean finished = m_percentSpeed >= 0
       ? m_wrist.getPosition() >= m_desiredPosition
       : m_wrist.getPosition() <= m_desiredPosition;
-    System.out.println("   finished="+finished);
     return finished;
   }
 }
