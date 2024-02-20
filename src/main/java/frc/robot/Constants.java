@@ -4,6 +4,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.SparkRelativeEncoder;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -202,5 +203,33 @@ public final class Constants {
             public static final double kMinOutput = -1.0;
             public static final double kMaxOutput = +1.0;
         }
+    }
+    /**
+     * The wrist motor is a brushed 'seat motor' with a REV through bore
+     * encoder attached to its shaft.  Do the motor and encoder agree on
+     * which direction is positive?  Probably not.
+     */
+    public static class WristConstants{
+        public static final int kCANId = 59;
+        public static final MotorType kMotorType = MotorType.kBrushed;
+        public static final double encoderRotationsPerFinalRotation = 1.0;
+        public static final String kName = "Wrist";
+        public static final SparkRelativeEncoder.Type encoderType = SparkRelativeEncoder.Type.kQuadrature;
+        public static int encoderCountsPerRevolution = 8192; // rev says 4096 ...
+
+        public static final class PID {
+            // velocity PID values
+            public static final double kP = 0.000080; // TODO: fill in PID coefficients
+            public static final double kI = 0.000000;
+            public static final double kD = 0.000000;
+            public static final double kFeedForward = 0.000000;
+            public static final double kIZone = 0.000000;
+            public static final double kMinOutput = -1.0;
+            public static final double kMaxOutput = +1.0;
+        }
+        // positions are in rotations counterclockwise from zero
+        // when looked at from robot's right.
+        public static final double minSafePosition = 0.1;
+        public static final double maxSafePosition = 0.2;
     }
 }

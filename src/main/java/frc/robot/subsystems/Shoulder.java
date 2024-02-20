@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkBase.IdleMode;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -19,8 +17,8 @@ public class Shoulder extends SubsystemBase {
     Constants.ShoulderConstants.Right.kName);
   /** Creates a new Shoulder. */
   public Shoulder() {
-    m_leftMotor.getSparkMax().setIdleMode(IdleMode.kBrake);
-    m_rightMotor.getSparkMax().setIdleMode(IdleMode.kBrake);
+    m_leftMotor.setToBrakeOnIdle(true);
+    m_rightMotor.setToBrakeOnIdle(true);
     m_leftMotor.addFollower(m_rightMotor, true);
     m_leftMotor.setPIDCoefficients(Constants.ShoulderConstants.PID.kP,
        Constants.ShoulderConstants.PID.kI,

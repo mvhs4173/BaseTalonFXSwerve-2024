@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.SparkRelativeEncoder;
 import com.revrobotics.CANSparkBase.ControlType;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
@@ -66,6 +67,22 @@ public class SparkMaxMotor extends SubsystemBase {
   public CANSparkMax getSparkMax(){
     return m_CANSparkMax;
   }
+
+  /**
+   * @param brakeOnIdle - if true, motor will be put in break mode when percentSpeed is 0;
+   * if false, motor will put put in coast mode when idle.
+   */
+  public void setToBrakeOnIdle(boolean brakeOnIdle){
+    if (brakeOnIdle){
+      m_CANSparkMax.setIdleMode(IdleMode.kBrake);
+    }else{
+      m_CANSparkMax.setIdleMode(IdleMode.kCoast);
+    }
+  }
+
+  // TODO: use 	enableSoftLimit​(CANSparkBase.SoftLimitDirection direction, boolean enable)
+  // and 	setSoftLimit​(CANSparkBase.SoftLimitDirection direction, float limit) to limit
+  // position.
 
   /**
    * Cause another SparkMaxMotor to get the same voltage as this motor.
