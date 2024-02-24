@@ -11,6 +11,7 @@ import com.revrobotics.SparkPIDController;
 import com.revrobotics.SparkRelativeEncoder;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkBase.SoftLimitDirection;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
@@ -127,7 +128,8 @@ public class SparkMaxMotor extends SubsystemBase {
    * Position of thing being rotated.  Units = rotations of that thing.
    */
   public double getPosition(){
-    return (m_RelativeEncoder.getPosition() - m_zeroEncoderPosition) / m_encoderRotationsPerFinalRotation;
+    // return (m_RelativeEncoder.getPosition() - m_zeroEncoderPosition) / m_encoderRotationsPerFinalRotation;
+    return encoderPositionToFinalPosition(m_RelativeEncoder.getPosition());
   }
 
   /**
@@ -170,7 +172,7 @@ public class SparkMaxMotor extends SubsystemBase {
   }
   public void setRPM(double rpm){
     double encoderRpm = rpm * m_encoderRotationsPerFinalRotation;
-    System.out.println("setting desired encoder rpm to " + encoderRpm);
+    // System.out.println("setting desired encoder rpm to " + encoderRpm);
     m_SparkPIDController.setReference(encoderRpm, ControlType.kVelocity);
   }
   // We use encoder-centric PID parameters so we can copy them from test/tuning program
@@ -199,6 +201,12 @@ public class SparkMaxMotor extends SubsystemBase {
   }
 
   // Here we use position, velocities, and acceleration from point of view of thing being rotated.  Time unit is minute. 
+  private double encoderPositionToFinalPosition(double encoderPosition){
+    return (encoderPosition - m_zeroEncoderPosition) / m_encoderRotationsPerFinalRotation;
+  } 
+  private double finalPositionToEncoderPosition(double finalPosition){
+    return finalPosition * m_encoderRotationsPerFinalRotation + m_zeroEncoderPosition;
+  } 
   public void doSmartMotion(double desiredPosition, double maxVelocity, double minVelocity,
     double maxAcceleration, double allowedClosedLoopError){
       m_desiredPosition = desiredPosition;
@@ -206,11 +214,42 @@ public class SparkMaxMotor extends SubsystemBase {
       m_SparkPIDController.setSmartMotionMinOutputVelocity(minVelocity * m_encoderRotationsPerFinalRotation, m_SmartMotionSlot);
       m_SparkPIDController.setSmartMotionMaxAccel(maxAcceleration * m_encoderRotationsPerFinalRotation, m_SmartMotionSlot);
       m_SparkPIDController.setSmartMotionAllowedClosedLoopError(allowedClosedLoopError/m_encoderRotationsPerFinalRotation, m_SmartMotionSlot); // what units?
-      double desiredEncoderPosition = m_desiredPosition * m_encoderRotationsPerFinalRotation + m_zeroEncoderPosition;
+      //double desiredEncoderPosition = m_desiredPosition * m_encoderRotationsPerFinalRotation + m_zeroEncoderPosition;
+      double desiredEncoderPosition = finalPositionToEncoderPosition(m_desiredPosition);
       System.out.println("Going from encoder position " + df2.format(m_RelativeEncoder.getPosition()) + " to " + df2.format(desiredEncoderPosition));
       m_SparkPIDController.setReference(desiredEncoderPosition, CANSparkMax.ControlType.kSmartMotion);
     }
-
+    /**
+     * Stop pushing backward when structure has rotated down to or below minFinalPosition
+     * @param minFinalPosition - minimum allowed position.  Units are revolutions of
+     * final structure.
+     */
+    public void setAndEnableLowerSoftLimit(double minFinalPosition){
+      double minEncoderPosition = finalPositionToEncoderPosition(minFinalPosition);
+      m_CANSparkMax.setSoftLimit(SoftLimitDirection.kReverse, (float)minEncoderPosition);
+      m_CANSparkMax.enableSoftLimit(SoftLimitDirection.kReverse, true);
+    }
+    /**
+     * Stop pushing forward when structure has rotated up to or past maxFinalPosition
+     * @param maxFinalPosition - maximum allowed position.  Units are revolutions of
+     * final structure.
+     */
+    public void setAndEnableUpperSoftLimit(double maxFinalPosition){
+      double maxEncoderPosition = finalPositionToEncoderPosition(maxFinalPosition);
+      m_CANSparkMax.setSoftLimit(SoftLimitDirection.kForward, (float)maxEncoderPosition);
+      m_CANSparkMax.enableSoftLimit(SoftLimitDirection.kForward, true);
+    }
+    /**
+     * Stop respecting soft limits.  Intended for emergency use or for testing.
+     */
+    public void disableSoftLimits(){
+      m_CANSparkMax.enableSoftLimit(SoftLimitDirection.kForward, false);
+      m_CANSparkMax.enableSoftLimit(SoftLimitDirection.kReverse, false);
+    }
+    /**
+     * Not implemented yet.  The intent is to be still, even if some force is
+     * pushing on it.
+     */
     public void holdCurrentPosition(){
       // TODO: Use raw (not "smart motion") position control.  Must use different set of PID values.
       // Should we use "slots": one for velocity and one for position? 

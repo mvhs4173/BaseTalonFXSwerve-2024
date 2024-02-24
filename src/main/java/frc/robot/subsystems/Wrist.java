@@ -26,6 +26,8 @@ public class Wrist extends SubsystemBase {
       SmartDashboard.putNumber("Wrist %speed", m_percentSpeed);
     }
     m_motor.setToBrakeOnIdle(true);
+    m_motor.setAndEnableLowerSoftLimit(Constants.WristConstants.lowerSoftLimit);
+    m_motor.setAndEnableUpperSoftLimit(Constants.WristConstants.upperSoftLimit);
   }
 
   /**
@@ -49,18 +51,5 @@ public class Wrist extends SubsystemBase {
        m_percentSpeed = SmartDashboard.getNumber("Wrist %speed", 0.0);
        m_motor.setPercentSpeed(m_percentSpeed);
     }
-    if(false){
-    // safety stuff - never continue to go out of bounds.  Need to get direction from controller.
-    // see soft limit stuff to be added to SparkMaxMotor.
-    if (getPosition() <= Constants.WristConstants.minSafePosition
-      && m_motor.getSparkMax().getAppliedOutput() >= 0) {
-        m_percentSpeed = 0;
-    } else if (getPosition() >= Constants.WristConstants.maxSafePosition
-      && m_motor.getSparkMax().getAppliedOutput() <= 0) {
-        m_percentSpeed = 0;
-    }
-  }
-
-    //m_motor.setPercentSpeed(m_percentSpeed);
   }
 }
