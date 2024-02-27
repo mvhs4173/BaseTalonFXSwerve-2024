@@ -167,6 +167,9 @@ public class SparkMaxMotor extends SubsystemBase {
   /**
    * @param percent: desired 'speed' on a scale of -1.0 to 1.0
    */
+  public void setVoltage(double voltage){
+    m_CANSparkMax.setVoltage(voltage);
+  }
   public void setPercentSpeed(double percent){
     m_CANSparkMax.set(percent);
   }

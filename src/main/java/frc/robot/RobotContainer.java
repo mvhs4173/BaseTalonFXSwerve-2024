@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -9,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.autos.*;
 import frc.robot.commands.*;
+import frc.robot.commands.IntakeUntilBeamBreak;
 import frc.robot.subsystems.*;
 
 /**
@@ -40,6 +42,17 @@ public class RobotContainer {
     private final Shoulder m_shoulder = TuningVariables.useShoulder.getBoolean() ? new Shoulder() : null;
     private final Shooter m_shooter = TuningVariables.useShooter.getBoolean() ? new Shooter() : null;
     private final Wrist m_wrist = TuningVariables.useWrist.getBoolean() ? new Wrist() : null;
+    private final BeamBreakSensor m_BeamBreakSensor = new BeamBreakSensor();
+    private final CollectorRoller m_CollectorRoller = TuningVariables.useCollectorRoller.getBoolean() ? new CollectorRoller() : null;
+
+    /* Autos */
+    private final SendableChooser<Command> m_chooser = new SendableChooser<>();
+    private final 
+    Command m_Auto_1 = null;
+        //put auto routine here. You may change the name so that it is more fitting than simpleAuto 
+    private final Command m_Auto_2 = null;
+        //put auto routine here. You may change the name so that it is more fitting than complexAuto
+    
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         if (s_Swerve == null){
@@ -67,6 +80,13 @@ public class RobotContainer {
                 () -> robotCentric.getAsBoolean()
             )
         );
+
+        //Add commands to the autonomous command chooser
+        m_chooser.setDefaultOption("Simple Auto", new exampleAuto(s_Swerve));
+        m_chooser.addOption("Another Auto", m_Auto_1);
+        m_chooser.addOption("A Third Auto", m_Auto_2);
+        //Put the chooser on the dashboard
+        SmartDashboard.putData(m_chooser);
 
         // Configure the button bindings
         configureButtonBindings();
@@ -100,6 +120,15 @@ public class RobotContainer {
                 new JoystickButton(m_armController, XboxController.Button.kStart.value)
                     .onTrue(new InstantCommand( () -> m_shoulder.getSparkMaxMotor().setCurrentPositionAsZeroEncoderPosition()));
             }
+            if(m_CollectorRoller != null && m_shooter != null){
+                //new JoystickButton(m_armController, XboxController.Button.kRightBumper.value)
+                //.whileTrue(new InstantCommand(()->m_shooter.setPercentSpeed(-0.1)));
+                //new JoystickButton(m_armController, XboxController.Button.kRightBumper.value)
+                //.whileFalse(new InstantCommand(()->m_shooter.setPercentSpeed(0)));
+                //new JoystickButton(m_armController, XboxController.Button.kLeftBumper.value)
+                //    .onTrue(new IntakeUntilBeamBreak(m_CollectorRoller, m_BeamBreakSensor, m_shooter, 750.0).withTimeout(5.0));
+                
+            }
         }
     }
 
@@ -110,6 +139,6 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An ExampleCommand will run in autonomous
-        return new exampleAuto(s_Swerve);
+        return m_chooser.getSelected();
     }
 }

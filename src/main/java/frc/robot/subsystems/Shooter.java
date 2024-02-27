@@ -64,10 +64,14 @@ public class Shooter extends SubsystemBase {
     // This method will be called once per scheduler run
     if (m_debug) {
       // TODO: control speed from a default command that looks at an axis & have buttons to set RPMs for in and out
-      m_percentSpeed = SmartDashboard.getNumber("Shooter %speed", 0.0);
-      setPercentSpeed(m_percentSpeed);
-      SmartDashboard.putNumber("Shooter %speed", m_percentSpeed);
+      //m_percentSpeed = SmartDashboard.getNumber("Shooter %speed", 0.0);
+      //setPercentSpeed(m_percentSpeed);
+      //SmartDashboard.putNumber("Shooter %speed", m_percentSpeed);
     }
+  }
+
+  public void stop(){
+    setPercentSpeed(0.0);
   }
 
   public double getLeftVelocity(){

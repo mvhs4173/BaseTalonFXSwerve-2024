@@ -60,12 +60,12 @@ public final class Constants {
 
         /* These values are used by the drive falcon to ramp in open loop and closed loop driving.
          * We found a small open loop ramp (0.25) helps with tread wear, tipping, etc */
-        public static final double openLoopRamp = 0.25;
-        public static final double closedLoopRamp = 0.0;
+        public static final double openLoopRamp = 0.35;
+        public static final double closedLoopRamp = 0.35;
         /*Let's allow ramp control on angle motors as well.
          * "Ramp" is number of seconds between stopped and full speed */
-        public static final double angleOpenLoopRamp = 0;
-        public static final double angleClosedLoopRamp = .18;
+        public static final double angleOpenLoopRamp = 0.35;
+        public static final double angleClosedLoopRamp = .35;
         // Increasing closedLoopRamp lowers peak current draw,
         // but causes more oscillation in angle.
 
@@ -87,9 +87,9 @@ public final class Constants {
 
         /* Swerve Profiling Values */
         /** Meters per Second */
-        public static final double maxSpeed = 4.5; //TODO: This must be tuned to specific robot
+        public static final double maxSpeed = 2.0; //TODO: This must be tuned to specific robot
         /** Radians per Second */
-        public static final double maxAngularVelocity = 10.0; //TODO: This must be tuned to specific robot
+        public static final double maxAngularVelocity = 2.0; //TODO: This must be tuned to specific robot
 
         /* Neutral Modes */
         public static final NeutralModeValue angleNeutralMode = NeutralModeValue.Coast;
@@ -202,8 +202,8 @@ public final class Constants {
             public static final double kD = 0.000000;
             public static final double kFeedForward = 0.000170 * 1;
             public static final double kIZone = 0.000000;
-            public static final double kMinOutput = -1.0;
-            public static final double kMaxOutput = +1.0;
+            public static final double kMinOutput = -5.0;
+            public static final double kMaxOutput = +5.0;
         }
     }
     /**
@@ -235,5 +235,23 @@ public final class Constants {
         // when looked at from robot's right.
         public static final double minSafePosition = 0.1;
         public static final double maxSafePosition = 0.2;
+    }
+
+    /**Collector roller is a brushless motor connected to a roller 
+     * on the front of robot for intaking notes
+     */
+    public static class CollectorRollerConstants{
+        public static final int kCANId = 55;
+        public static final MotorType kMotorType = MotorType.kBrushless;
+        public static final double encoderRotationsPerFinalRotation = 10.0;
+        public static final String kName = "CollectorRoller";
+        public static final double defaultPullInSpeed = 0.8; //percent speed
+        public static final double defaultPushOutSpeed = 0.4; //percent speed
+    }
+
+    public static class BeamBreakSensorConstants{
+        public static final int channel = 0;
+        public static final boolean normallyOpen = true;
+        public static final String name = "BeamBreak";
     }
 }

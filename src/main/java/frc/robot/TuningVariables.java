@@ -44,8 +44,9 @@ public enum TuningVariables {
      *  If so, it will be lowest numbered available port.
      *  false means to not create that controller object.
      */
-    useArmController(true);
-
+    useArmController(true),
+    /**true means to try to use the collector roller */
+    useCollectorRoller(true);
 
     private double m_defaultValueNumber;
     private boolean m_defaultValueBoolean;

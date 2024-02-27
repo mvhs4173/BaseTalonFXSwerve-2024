@@ -27,8 +27,8 @@ public class Shoulder extends SubsystemBase {
        Constants.ShoulderConstants.PID.kFeedForward,
        Constants.ShoulderConstants.PID.kMinOutput,
        Constants.ShoulderConstants.PID.kMaxOutput);
-    m_leftMotor.setAndEnableLowerSoftLimit(Constants.ShoulderConstants.lowerSoftLimit);
-    m_leftMotor.setAndEnableUpperSoftLimit(Constants.ShoulderConstants.upperSoftLimit);
+    //m_leftMotor.setAndEnableLowerSoftLimit(Constants.ShoulderConstants.lowerSoftLimit);
+    //m_leftMotor.setAndEnableUpperSoftLimit(Constants.ShoulderConstants.upperSoftLimit);
   }
 
   public SparkMaxMotor getSparkMaxMotor(){
