@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 /**
@@ -60,15 +59,7 @@ public class Shooter extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-    if (m_debug) {
-      // TODO: control speed from a default command that looks at an axis & have buttons to set RPMs for in and out
-      //m_percentSpeed = SmartDashboard.getNumber("Shooter %speed", 0.0);
-      //setPercentSpeed(m_percentSpeed);
-      //SmartDashboard.putNumber("Shooter %speed", m_percentSpeed);
-    }
-  }
+  public void periodic() {}
 
   public void stop(){
     setPercentSpeed(0.0);

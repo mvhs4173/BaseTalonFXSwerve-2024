@@ -13,7 +13,7 @@ public class IntakeUntilBeamBreak extends Command {
   private CollectorRoller m_CollectorRoller;
   private BeamBreakSensor m_BeamBreakSensor;
   private Shooter m_Shooter;
-  private double m_pullInSpeed;
+  //private double m_pullInSpeed;
   private double m_shooterRPM;
 
   /** Creates a new IntakeUntilBeamBreak. */

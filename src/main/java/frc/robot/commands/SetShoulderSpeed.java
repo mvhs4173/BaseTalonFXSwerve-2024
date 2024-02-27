@@ -9,19 +9,24 @@ import frc.robot.subsystems.Shoulder;
 
 public class SetShoulderSpeed extends Command {
   private Shoulder m_shoulder;
-  private double m_speed;
+  private double m_RPM;
   /** Creates a new SetShoulderSpeed. */
-  public SetShoulderSpeed(Shoulder shoulder, double speed) {
+  /**
+   * Creates a new SetShoulderSpeed.
+   * @param shoulder - a shoulder object
+   * @param RPM - desired revolutions per minute, clockwise when seen from robot's left.  (Up is negative.) 
+   */
+  public SetShoulderSpeed(Shoulder shoulder, double RPM) {
     m_shoulder = shoulder;
-    m_speed = speed;
+    m_RPM = RPM;
     addRequirements(m_shoulder);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    System.out.println("setting shoulder speed to " + m_speed);
-    m_shoulder.getSparkMaxMotor().setRPM(m_speed);
+    System.out.println("setting shoulder speed to " + m_RPM + " RPM");
+    m_shoulder.getSparkMaxMotor().setRPM(m_RPM);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

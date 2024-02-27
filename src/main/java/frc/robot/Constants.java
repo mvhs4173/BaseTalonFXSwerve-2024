@@ -185,8 +185,8 @@ public final class Constants {
     public static final class ShoulderConstants {
         public static final MotorType kMotorType = MotorType.kBrushless;
         public static final double encoderRotationsPerFinalRotation = 140.0;
-        public static final double lowerSoftLimit = 0.0; // in revolutions of shoulder
-        public static final double upperSoftLimit = 0.25;
+        public static final double lowerSoftLimit = -0.35; // in revolutions of shoulder
+        public static final double upperSoftLimit = 0.01;
         public static final class Left{
             public static final int kCANId = 52;
             public static final String kName = "Left Shoulder";
@@ -219,7 +219,7 @@ public final class Constants {
         public static final SparkRelativeEncoder.Type encoderType = SparkRelativeEncoder.Type.kQuadrature;
         public static int encoderCountsPerRevolution = 8192;
         public static double lowerSoftLimit = 0.0; // in rotations of wrist
-        public static double upperSoftLimit = 0.24;
+        public static double upperSoftLimit = 0.28;
 
         public static final class PID {
             // velocity PID values

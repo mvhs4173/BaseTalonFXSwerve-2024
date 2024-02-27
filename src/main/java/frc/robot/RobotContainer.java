@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.autos.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
@@ -36,7 +36,7 @@ public class RobotContainer {
     /* Driver controller Buttons */
     private final JoystickButton zeroGyro = m_driveController != null ? new JoystickButton(m_driveController, XboxController.Button.kY.value) : null;
     private final JoystickButton robotCentric = m_driveController != null ? new JoystickButton(m_driveController, XboxController.Button.kLeftBumper.value) : null;
-
+    /* Arm/note handler controller buttons are defined in configureButtonBindings below */
     /* Subsystems */
     private final Swerve s_Swerve = TuningVariables.useSwerve.getBoolean() ? new Swerve() : null; // set s_Swerve to null when testing arm & shooter alone
     private final Shoulder m_shoulder = TuningVariables.useShoulder.getBoolean() ? new Shoulder() : null;
@@ -108,47 +108,61 @@ public class RobotContainer {
         if (s_Swerve != null && zeroGyro != null){
           zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
         }
-        if (m_armController != null){
-            if (m_wrist != null) {
-                new JoystickButton(m_armController, XboxController.Button.kX.value)
-                 .onTrue(new WristGoToPosition(m_wrist, 0.5, .20)); 
-                new JoystickButton(m_armController, XboxController.Button.kY.value)
-                 .onTrue(new WristGoToPosition(m_wrist, 0.5, .22));             
-            }
-            if (m_shoulder != null){
-                //new JoystickButton(m_armController, XboxController.Button.kLeftBumper.value)
-                //    .whileTrue(new SetShoulderSpeed(m_shoulder, 5.0)); // 5 rpm => 3.0 seconds to travel 90 degrees
-                //new JoystickButton(m_armController, XboxController.Button.kRightBumper.value)
-                //    .whileTrue(new SetShoulderSpeed(m_shoulder, -5.0));
-                //new JoystickButton(m_armController, XboxController.Button.kStart.value)
-                //    .onTrue(new InstantCommand( () -> m_shoulder.getSparkMaxMotor().setCurrentPositionAsZeroEncoderPosition()));
-            }
-            if(m_CollectorRoller != null && m_shooter != null){
-                // new JoystickButton(m_armController, XboxController.Button.kRightBumper.value)
-                //.whileTrue(new InstantCommand(()->m_shooter.setPercentSpeed(-0.1)));
-                //new JoystickButton(m_armController, XboxController.Button.kRightBumper.value)
-                //.whileFalse(new InstantCommand(()->m_shooter.setPercentSpeed(0)));
-                new JoystickButton(m_armController, XboxController.Button.kLeftBumper.value)
-                  .onTrue(new IntakeUntilBeamBreak(m_CollectorRoller, m_BeamBreakSensor, m_shooter, 750.0).withTimeout(5.0));
-      
-                  
-            }
-            Command goToCollectionPosition = new ParallelCommandGroup(
-                new MoveShoulderTo(m_shoulder, 0.0, 5.0, 1.0, 0.0),
-                new WristGoToPosition(m_wrist, 0.6, 0)
-            ).withTimeout(5.0);
-            JoystickButton armA = new JoystickButton(m_armController, XboxController.Button.kA.value);
-            armA.whileTrue(goToCollectionPosition);
-            Command goToSpeakerShotPosition = new ParallelCommandGroup(
-                new MoveShoulderTo(m_shoulder, 0.0, 5.0, 1.0, 0.0),
-                new WristGoToPosition(m_wrist, 0.7, 0.30)
-            ).withTimeout(5.0);
-            JoystickButton armB = new JoystickButton(m_armController, XboxController.Button.kB.value);
-            armB.whileTrue(goToSpeakerShotPosition);
-            
-            JoystickButton armRightBumper = new JoystickButton(m_armController, XboxController.Button.kRightBumper.value);
-            armRightBumper.whileTrue(new Shoot(m_shooter, 5500.0));
-        }
+        /* Start assuming the m_armController is not null */
+        JoystickButton armA = new JoystickButton(m_armController, XboxController.Button.kA.value);
+        // JoystickButton armB = new JoystickButton(m_armController, XboxController.Button.kB.value);
+        // JoystickButton armX = new JoystickButton(m_armController, XboxController.Button.kX.value);
+        // JoystickButton armY = new JoystickButton(m_armController, XboxController.Button.kY.value);
+        JoystickButton armLeftBumper = new JoystickButton(m_armController, XboxController.Button.kLeftBumper.value);
+        JoystickButton armRightBumper = new JoystickButton(m_armController, XboxController.Button.kRightBumper.value);
+        // JoystickButton armStart = new JoystickButton(m_armController, XboxController.Button.kStart.value);
+        // JoystickButton armBack = new JoystickButton(m_armController, XboxController.Button.kBack.value);
+
+        Trigger armLeftTrigger = new Trigger(() -> m_armController.getLeftTriggerAxis() > 0.5 );
+        Trigger armRightTrigger = new Trigger(() -> m_armController.getRightTriggerAxis() > 0.5);
+
+        Command goToCollectionPosition = new ParallelCommandGroup(
+            new MoveShoulderTo(m_shoulder, 0.0, 5.0, 1.0, 0.0)
+               .until(() -> Math.abs(m_shoulder.getPosition() - 0.0) < 0.01),
+            new WristGoToPosition(m_wrist, 0.6, 0)
+        ).withTimeout(3.0);
+        Command goToSpeakerShotPosition = new ParallelCommandGroup(
+            new MoveShoulderTo(m_shoulder, 0.0, 5.0, 1.0, 0.0)
+                .until(() -> Math.abs(m_shoulder.getPosition() - 0.0) < 0.01),
+            new WristGoToPosition(m_wrist, 0.7, 0.30)
+        ).withTimeout(3.0);
+        Command goToAmpShotPosition = new ParallelCommandGroup(
+            new MoveShoulderTo(m_shoulder, -.25, 5.0, 1.0, 0.0)
+                .until(() -> Math.abs(m_shoulder.getPosition() - (-0.25)) < 0.01),
+            new WristGoToPosition(m_wrist, 0.7, -0.1)
+        ).withTimeout(3.0);
+        Command shootForSpeaker = new Shoot(m_shooter, 5500.0);
+        Command shootForAmp = new Shoot(m_shooter, 2000.0);
+        Command doIntake = 
+          new IntakeUntilBeamBreak(m_CollectorRoller, m_BeamBreakSensor, m_shooter, 750.0).withTimeout(5.0);
+        
+        armA.onTrue(doIntake);
+
+        armLeftBumper.whileTrue(goToSpeakerShotPosition);
+        armLeftBumper.onFalse(goToCollectionPosition);
+        armRightBumper.whileTrue(shootForSpeaker);
+
+        armLeftTrigger.whileTrue(goToAmpShotPosition);
+        armLeftTrigger.onFalse(goToCollectionPosition);
+        armRightTrigger.whileTrue(shootForAmp);
+
+        // Now for manual control of arm and wrist
+        // While left joystick is pushed forward, shoulder goes up at constant speed
+        new Trigger(() -> m_armController.getLeftY() < -0.5)
+          .whileTrue(new SetShoulderSpeed(m_shoulder, -5.0));
+        // While left joystick pushed backward, shoulder goes down at constant speed
+        new Trigger(() -> m_armController.getLeftY() > 0.5)
+          .whileTrue(new SetShoulderSpeed(m_shoulder, 5.0));
+        // Right joystick controls wrist in similar way
+        new Trigger(() -> m_armController.getRightY() < -0.5)
+          .whileTrue(new SetWristPercentSpeed(m_wrist, 0.6));
+        new Trigger(() -> m_armController.getRightY() > 0.5)
+          .whileTrue(new SetWristPercentSpeed(m_wrist, -0.5));
     }
 
     /**

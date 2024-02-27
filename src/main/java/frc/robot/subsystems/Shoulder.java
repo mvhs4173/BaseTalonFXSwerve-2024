@@ -35,6 +35,10 @@ public class Shoulder extends SubsystemBase {
     return m_leftMotor;
   }
 
+  public double getPosition(){
+    return m_leftMotor.getPosition();
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
