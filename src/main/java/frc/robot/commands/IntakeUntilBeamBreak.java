@@ -47,6 +47,6 @@ public class IntakeUntilBeamBreak extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;  //m_BeamBreakSensor.noteIsInShooter();
+    return m_BeamBreakSensor.noteIsInShooter();
   }
 }
