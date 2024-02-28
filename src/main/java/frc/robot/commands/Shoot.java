@@ -6,18 +6,30 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Shooter;
-
+/**
+ * Command to take a shot, either at given RPM or at full power.
+ * This command will never finish: you need to interrupt it when binding
+ * it to a trigger.
+ */
 public class Shoot extends Command {
   private Shooter m_shooter;
   private double m_RPM;
   private boolean m_fullBlast = false;
-  /** Creates a new Shoot. */
+  /** 
+   * Rotate shooter motors ourward at given RMP
+   * @param shooter - the Shooter object to control
+   * @param RPM - the desired revolutions per minute outward of the shooter wheels
+   */
   public Shoot(Shooter shooter, double RPM) {
     m_shooter = shooter;
     m_RPM = -RPM;
     m_fullBlast = false;
     addRequirements(m_shooter);
   }
+  /**
+   * Rotate shooter wheels outward at maximum power
+   * @param shooter - the Shooter object to control
+   */
   public Shoot(Shooter shooter) {
     m_shooter = shooter;
     m_fullBlast = true;
