@@ -134,7 +134,7 @@ public class RobotContainer {
         Command goToAmpShotPosition = new ParallelCommandGroup(
             new MoveShoulderTo(m_shoulder, -.25, 5.0, 1.0, 0.0)
                 .until(() -> Math.abs(m_shoulder.getPosition() - (-0.25)) < 0.01),
-            new WristGoToPosition(m_wrist, 0.7, -0.1)
+            new WristGoToPosition(m_wrist, 0.7, 0.20)
         ).withTimeout(3.0);
         // Command shootForSpeaker = new Shoot(m_shooter, 6500.0);
         Command shootForSpeaker = new Shoot(m_shooter);
