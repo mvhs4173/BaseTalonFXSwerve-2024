@@ -129,14 +129,15 @@ public class RobotContainer {
         Command goToSpeakerShotPosition = new ParallelCommandGroup(
             new MoveShoulderTo(m_shoulder, 0.0, 5.0, 1.0, 0.0)
                 .until(() -> Math.abs(m_shoulder.getPosition() - 0.0) < 0.01),
-            new WristGoToPosition(m_wrist, 0.7, 0.30)
+            new WristGoToPosition(m_wrist, 0.7, 0.240)
         ).withTimeout(3.0);
         Command goToAmpShotPosition = new ParallelCommandGroup(
             new MoveShoulderTo(m_shoulder, -.25, 5.0, 1.0, 0.0)
                 .until(() -> Math.abs(m_shoulder.getPosition() - (-0.25)) < 0.01),
             new WristGoToPosition(m_wrist, 0.7, -0.1)
         ).withTimeout(3.0);
-        Command shootForSpeaker = new Shoot(m_shooter, 5500.0);
+        // Command shootForSpeaker = new Shoot(m_shooter, 6500.0);
+        Command shootForSpeaker = new Shoot(m_shooter);
         Command shootForAmp = new Shoot(m_shooter, 2000.0);
         Command doIntake = 
           new IntakeUntilBeamBreak(m_CollectorRoller, m_BeamBreakSensor, m_shooter, 750.0).withTimeout(5.0);

@@ -10,17 +10,27 @@ import frc.robot.subsystems.Shooter;
 public class Shoot extends Command {
   private Shooter m_shooter;
   private double m_RPM;
+  private boolean m_fullBlast = false;
   /** Creates a new Shoot. */
   public Shoot(Shooter shooter, double RPM) {
     m_shooter = shooter;
     m_RPM = -RPM;
+    m_fullBlast = false;
     addRequirements(m_shooter);
+  }
+  public Shoot(Shooter shooter) {
+    m_shooter = shooter;
+    m_fullBlast = true;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_shooter.setRPM(m_RPM);
+    if (m_fullBlast){
+      m_shooter.setPercentSpeed(-1.0);
+    } else {
+      m_shooter.setRPM(m_RPM);
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
