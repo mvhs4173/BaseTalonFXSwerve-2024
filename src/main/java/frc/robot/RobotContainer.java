@@ -148,11 +148,11 @@ public class RobotContainer {
 
         armLeftBumper.whileTrue(goToSpeakerShotPosition);
         armLeftBumper.onFalse(goToCollectionPosition);
-        armRightBumper.whileTrue(shootForSpeaker);
+        armRightBumper.onTrue(shootForSpeaker.withTimeout(2.0));
 
         armLeftTrigger.whileTrue(goToAmpShotPosition);
         armLeftTrigger.onFalse(goToCollectionPosition);
-        armRightTrigger.whileTrue(shootForAmp);
+        armRightTrigger.onTrue(shootForAmp.withTimeout(2.0));
 
         // Now for manual control of arm and wrist
         // While left joystick is pushed forward, shoulder goes up at constant speed
