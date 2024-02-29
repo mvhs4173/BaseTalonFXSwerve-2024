@@ -202,8 +202,8 @@ public final class Constants {
             public static final double kD = 0.000000;
             public static final double kFeedForward = 0.000170 * 1;
             public static final double kIZone = 0.000000;
-            public static final double kMinOutput = -5.0;
-            public static final double kMaxOutput = +5.0;
+            public static final double kMinOutput = -1.0;
+            public static final double kMaxOutput = +1.0;
         }
     }
     /**
