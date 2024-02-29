@@ -7,7 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Shoulder;
 
-public class MoveShoulderTo extends Command {
+public class MoveShoulderToUsingSmartMotion extends Command {
   private Shoulder m_shoulder;
   private double m_desiredPosition;
   private double m_maxSpeed;
@@ -23,7 +23,7 @@ public class MoveShoulderTo extends Command {
    * @param allowedCloseLoopError - ?  (zero seems to be ok)
    */
 
-  public MoveShoulderTo(Shoulder shoulder, double desiredPosition, double maxSpeed, double maxAcceleration, double allowedClosedLoopError) {
+  public MoveShoulderToUsingSmartMotion(Shoulder shoulder, double desiredPosition, double maxSpeed, double maxAcceleration, double allowedClosedLoopError) {
     m_shoulder = shoulder;
     m_desiredPosition = desiredPosition;
     m_maxSpeed = maxSpeed;

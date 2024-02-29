@@ -124,17 +124,17 @@ public class RobotContainer {
         Trigger armRightTrigger = new Trigger(() -> m_armController.getRightTriggerAxis() > 0.5);
 
         Command goToCollectionPosition = new ParallelCommandGroup(
-            new MoveShoulderTo(m_shoulder, 0.0, 5.0, 1.0, 0.0)
+            new MoveShoulderToUsingSmartMotion(m_shoulder, 0.0, 5.0, 1.0, 0.0)
                .until(() -> Math.abs(m_shoulder.getPosition() - 0.0) < 0.01),
             new WristGoToPosition(m_wrist, 0.6, 0)
         ).withTimeout(3.0);
         Command goToSpeakerShotPosition = new ParallelCommandGroup(
-            new MoveShoulderTo(m_shoulder, 0.0, 5.0, 1.0, 0.0)
+            new MoveShoulderToUsingSmartMotion(m_shoulder, 0.0, 5.0, 1.0, 0.0)
                 .until(() -> Math.abs(m_shoulder.getPosition() - 0.0) < 0.01),
             new WristGoToPosition(m_wrist, 0.7, 0.240)
         ).withTimeout(3.0);
         Command goToAmpShotPosition = new ParallelCommandGroup(
-            new MoveShoulderTo(m_shoulder, -.25, 5.0, 1.0, 0.0)
+            new MoveShoulderToUsingSmartMotion(m_shoulder, -.25, 5.0, 1.0, 0.0)
                 .until(() -> Math.abs(m_shoulder.getPosition() - (-0.25)) < 0.01),
             new WristGoToPosition(m_wrist, 0.7, 0.20)
         ).withTimeout(3.0);
@@ -158,10 +158,10 @@ public class RobotContainer {
         // While left joystick is pushed forward, shoulder goes up at constant speed
         // While the 'back' button is pressed the soft limits on position will be ignored.
         new Trigger(() -> m_armController.getLeftY() < -0.5)
-          .whileTrue(new SetShoulderSpeed(m_shoulder, -3.0, armBack));
+          .whileTrue(new SetShoulderRPM(m_shoulder, -3.0, armBack));
         // While left joystick pushed backward, shoulder goes down at constant speed
         new Trigger(() -> m_armController.getLeftY() > 0.5)
-          .whileTrue(new SetShoulderSpeed(m_shoulder, 3.0, armBack));
+          .whileTrue(new SetShoulderRPM(m_shoulder, 3.0, armBack));
         // Right joystick controls wrist in similar way
         new Trigger(() -> m_armController.getRightY() < -0.5)
           .whileTrue(new SetWristPercentSpeed(m_wrist, 0.6, armBack));

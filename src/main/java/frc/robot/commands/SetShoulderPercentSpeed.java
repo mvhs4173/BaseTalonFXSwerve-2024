@@ -8,41 +8,45 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Shoulder;
 
-public class SetShoulderSpeed extends Command {
+public class SetShoulderPercentSpeed extends Command {
   private Shoulder m_shoulder;
-  private double m_RPM;
-  Trigger m_overrideSoftLimitsTrigger;
-  boolean m_softLimitsAreDisabled;
-  /** Creates a new SetShoulderSpeed. */
-  /**
-   * Creates a new SetShoulderSpeed.
-   * @param shoulder - a shoulder object
-   * @param RPM - desired revolutions per minute, clockwise when seen from robot's left.  (Up is negative.) 
+  private double m_percentSpeed;
+  private Trigger m_overrideSoftLimitsTrigger;
+  private boolean m_softLimitsAreDisabled;
+  /** 
+   * Creates a new SetShoulderPercentSpeed command.  Sets given percent power/speed until the end,
+   * where it sets RPM to zero (that is an attempt to hold arm in place). 
+   * @param shoulder - a Shoulder object
+   * @param percentSpeed - speed on a scale of [-1,1].
+   * I think this is speed in clockwise direction when viewed from robot's left, so negative raises arm.
    */
-  public SetShoulderSpeed(Shoulder shoulder, double RPM) {
+  public SetShoulderPercentSpeed(Shoulder shoulder, double percentSpeed) {
+    // Use addRequirements() here to declare subsystem dependencies.
     m_shoulder = shoulder;
-    m_RPM = RPM;
+    m_percentSpeed = percentSpeed;
     m_overrideSoftLimitsTrigger = null;
     m_softLimitsAreDisabled = false;
     addRequirements(m_shoulder);
   }
-  /**
-   * Creates a new SetShoulderSpeed that allows you to suspend the soft limits on position
-   * @param shoulder - a shoulder object
-   * @param RPM - desired revolutions per minute, clockwise when seen from robot's left.  (Up is negative.)
+  /** 
+   * Creates a new SetShoulderPercentSpeed command.  Sets given percent power/speed until the end,
+   * where it sets RPM to zero (that is an attempt to hold arm in place). 
+   * @param shoulder - a Shoulder object
+   * @param percentSpeed - speed on a scale of [-1,1].
+   * I think this is speed in clockwise direction when viewed from robot's left, so negative raises arm.
    * @param overrideSoftLimitsTrigger - a Trigger (including a JoystickButton) that, while pressed,
    * will allow motion to go beyond the soft position limits.
    */
-  public SetShoulderSpeed(Shoulder shoulder, double RPM, Trigger overrideSoftLimitsTrigger){
-    this(shoulder, RPM);
+  public SetShoulderPercentSpeed(Shoulder shoulder, double percentSpeed, Trigger overrideSoftLimitsTrigger){
+    this(shoulder, percentSpeed);
     m_overrideSoftLimitsTrigger = overrideSoftLimitsTrigger;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    System.out.println("setting shoulder speed to " + m_RPM + " RPM");
-    m_shoulder.getSparkMaxMotor().setRPM(m_RPM);
+    System.out.println("setting shoulder percent speed to " + m_percentSpeed);
+    m_shoulder.getSparkMaxMotor().setPercentSpeed(m_percentSpeed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -58,12 +62,15 @@ public class SetShoulderSpeed extends Command {
     }
   }
 
+  void stop(){
+    System.out.println("stopping shoulder motor");
+    m_shoulder.getSparkMaxMotor().setRPM(0.0);
+  }
+
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    System.out.println("stopping shoulder motor");
-    m_shoulder.getSparkMaxMotor().enableSoftLimits();
-    m_shoulder.getSparkMaxMotor().setRPM(0.0);
+    stop();
   }
 
   // Returns true when the command should end.
