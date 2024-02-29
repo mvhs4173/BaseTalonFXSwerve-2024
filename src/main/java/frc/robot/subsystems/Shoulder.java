@@ -35,6 +35,18 @@ public class Shoulder extends SubsystemBase {
     return m_leftMotor;
   }
 
+  public void setRPM(double RPM){
+    m_leftMotor.setRPM(RPM);
+  }
+
+  public void setPercentSpeed(double percentSpeed){
+    m_leftMotor.setPercentSpeed(percentSpeed);
+  }
+
+  public void holdPosition(){
+    setRPM(0.0); // see if this works in both arm raising and chassis raising modes
+  }
+
   public void setCurrentPositionAsZeroEncoderPosition(){
     m_leftMotor.setCurrentPositionAsZeroEncoderPosition();
   }

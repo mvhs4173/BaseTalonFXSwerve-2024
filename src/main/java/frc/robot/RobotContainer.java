@@ -124,20 +124,20 @@ public class RobotContainer {
         Trigger armRightTrigger = new Trigger(() -> m_armController.getRightTriggerAxis() > 0.5);
 
         Command goToCollectionPosition = new ParallelCommandGroup(
-            new MoveShoulderToUsingSmartMotion(m_shoulder, 0.0, 5.0, 1.0, 0.0)
+            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 3.0, 0.0)
                .until(() -> Math.abs(m_shoulder.getPosition() - 0.0) < 0.01),
             new WristGoToPosition(m_wrist, 0.6, 0)
         ).withTimeout(3.0);
         Command goToSpeakerShotPosition = new ParallelCommandGroup(
-            new MoveShoulderToUsingSmartMotion(m_shoulder, 0.0, 5.0, 1.0, 0.0)
+            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 3.0, 0.0)
                 .until(() -> Math.abs(m_shoulder.getPosition() - 0.0) < 0.01),
             new WristGoToPosition(m_wrist, 0.7, 0.240)
         ).withTimeout(3.0);
         Command goToAmpShotPosition = new ParallelCommandGroup(
-            new MoveShoulderToUsingSmartMotion(m_shoulder, -.25, 5.0, 1.0, 0.0)
-                .until(() -> Math.abs(m_shoulder.getPosition() - (-0.25)) < 0.01),
+            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 3.0, -0.20)
+                .until(() -> Math.abs(m_shoulder.getPosition() - (-0.20)) < 0.01),
             new WristGoToPosition(m_wrist, 0.7, 0.20)
-        ).withTimeout(3.0);
+        ).withTimeout(4.0);
         // Command shootForSpeaker = new Shoot(m_shooter, 6500.0);
         Command shootForSpeaker = new Shoot(m_shooter);
         Command shootForAmp = new Shoot(m_shooter, 2000.0);
