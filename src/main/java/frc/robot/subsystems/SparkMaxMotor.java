@@ -118,7 +118,7 @@ public class SparkMaxMotor extends SubsystemBase {
     if (m_RelativeEncoder == null){
       System.out.println("No encoder: cannot set current position as zero position!");
     } else {
-      System.out.print("Changing zeroEncoderPosition from " + df2.format(m_zeroEncoderPosition));
+      System.out.print(m_name + ": Changing zeroEncoderPosition from " + df2.format(m_zeroEncoderPosition));
       m_zeroEncoderPosition = m_RelativeEncoder.getPosition();
       System.out.println(" to " + df2.format(m_zeroEncoderPosition));
     }
