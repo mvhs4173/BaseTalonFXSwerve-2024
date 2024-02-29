@@ -117,7 +117,7 @@ public class RobotContainer {
         JoystickButton armLeftBumper = new JoystickButton(m_armController, XboxController.Button.kLeftBumper.value);
         JoystickButton armRightBumper = new JoystickButton(m_armController, XboxController.Button.kRightBumper.value);
         JoystickButton armStart = new JoystickButton(m_armController, XboxController.Button.kStart.value);
-        // JoystickButton armBack = new JoystickButton(m_armController, XboxController.Button.kBack.value);
+        JoystickButton armBack = new JoystickButton(m_armController, XboxController.Button.kBack.value);
         JoystickButton armRightStick = new JoystickButton(m_armController, XboxController.Button.kRightStick.value);
 
         Trigger armLeftTrigger = new Trigger(() -> m_armController.getLeftTriggerAxis() > 0.5 );
@@ -156,16 +156,17 @@ public class RobotContainer {
 
         // Now for manual control of arm and wrist
         // While left joystick is pushed forward, shoulder goes up at constant speed
+        // While the 'back' button is pressed the soft limits on position will be ignored.
         new Trigger(() -> m_armController.getLeftY() < -0.5)
-          .whileTrue(new SetShoulderSpeed(m_shoulder, -3.0));
+          .whileTrue(new SetShoulderSpeed(m_shoulder, -3.0, armBack));
         // While left joystick pushed backward, shoulder goes down at constant speed
         new Trigger(() -> m_armController.getLeftY() > 0.5)
-          .whileTrue(new SetShoulderSpeed(m_shoulder, 3.0));
+          .whileTrue(new SetShoulderSpeed(m_shoulder, 3.0, armBack));
         // Right joystick controls wrist in similar way
         new Trigger(() -> m_armController.getRightY() < -0.5)
-          .whileTrue(new SetWristPercentSpeed(m_wrist, 0.6));
+          .whileTrue(new SetWristPercentSpeed(m_wrist, 0.6, armBack));
         new Trigger(() -> m_armController.getRightY() > 0.5)
-          .whileTrue(new SetWristPercentSpeed(m_wrist, -0.5));
+          .whileTrue(new SetWristPercentSpeed(m_wrist, -0.5, armBack));
         // press right stick button to hold wrist at current position
         armRightStick.onTrue(new InstantCommand(m_wrist::holdPosition));
         armStart.onTrue(

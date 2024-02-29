@@ -56,6 +56,10 @@ public class Wrist extends SubsystemBase {
     m_motor.setCurrentPositionAsZeroEncoderPosition();
   }
 
+  public SparkMaxMotor getSparkMaxMotor(){
+    return m_motor;
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

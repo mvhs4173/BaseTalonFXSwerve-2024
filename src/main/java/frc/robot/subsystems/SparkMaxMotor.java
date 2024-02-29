@@ -243,11 +243,20 @@ public class SparkMaxMotor extends SubsystemBase {
       m_CANSparkMax.enableSoftLimit(SoftLimitDirection.kForward, true);
     }
     /**
-     * Stop respecting soft limits.  Intended for emergency use or for testing.
+     * Stop respecting soft limits in both directions.  Intended for emergency use or for testing.
      */
     public void disableSoftLimits(){
+      System.out.println(m_name + ": disabling soft limits on position");
       m_CANSparkMax.enableSoftLimit(SoftLimitDirection.kForward, false);
       m_CANSparkMax.enableSoftLimit(SoftLimitDirection.kReverse, false);
+    }
+    /**
+     * Resume respecting soft limits in both directions
+     */
+    public void enableSoftLimits(){
+      System.out.println(m_name + ": enabling soft limits on position");
+      m_CANSparkMax.enableSoftLimit(SoftLimitDirection.kForward, true);
+      m_CANSparkMax.enableSoftLimit(SoftLimitDirection.kReverse, true); 
     }
     /**
      * Not implemented yet.  The intent is to be still, even if some force is
