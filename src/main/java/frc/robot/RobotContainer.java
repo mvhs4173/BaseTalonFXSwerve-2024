@@ -121,32 +121,24 @@ public class RobotContainer {
         Trigger armRightTrigger = new Trigger(() -> m_armController.getRightTriggerAxis() > 0.5);
 
         Command goToCollectionPosition = new ParallelCommandGroup(
-            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 3.0, 0.0)
-               // .until(() -> Math.abs(m_shoulder.getPosition() - 0.0) < 0.01)
-               ,
+            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 3.0, 0.0),
             new WristGoToPosition(m_wrist, 0.6, 0)
         ).withTimeout(3.0);
         Command goToSpeakerShotPosition = new ParallelCommandGroup(
-            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 3.0, 0.0)
-                // .until(() -> Math.abs(m_shoulder.getPosition() - 0.0) < 0.01)
-                ,
+            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 3.0, 0.0),
             new WristGoToPosition(m_wrist, 0.7, 0.240)
-        ).withTimeout(3.0);
+        ).withTimeout(7.0);
         Command goToAmpShotPosition = new ParallelCommandGroup(
-            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 3.0, -0.21)
-                // .until(() -> Math.abs(m_shoulder.getPosition() - (-0.20)) < 0.01)
-                ,
+            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 3.0, -0.21),
             new WristGoToPosition(m_wrist, 0.7, 0.23)
         ).withTimeout(7.0);
         // Command gotoClimbPosition = that the arm should be straight up and the shooter should be parallel with the arm, folded inside it. 
         Command goToClimbPosition =  new ParallelCommandGroup(
-            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 5.0, -0.22)
-                //.until(() -> Math.abs(m_shoulder.getPosition() - (-0.22)) < 0.01)
-                ,
+            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 5.0, -0.22),
             new WristGoToPosition(m_wrist, 0.7, 0.240)
-        ).withTimeout(5.0);
+        ).withTimeout(7.0);
         // Command shootForSpeaker = new Shoot(m_shooter, 6500.0);
-        Command shootForSpeaker = new Shoot(m_shooter);
+        Command shootForSpeaker = new Shoot(m_shooter); // full blast (c. 6000)
         Command shootForAmp = new Shoot(m_shooter, 5000.0);
         Command doIntake = 
           new IntakeUntilBeamBreak(m_CollectorRoller, m_BeamBreakSensor, m_shooter, 750.0).withTimeout(5.0);
@@ -155,22 +147,29 @@ public class RobotContainer {
 
         armLeftBumper.whileTrue(goToSpeakerShotPosition);
         armLeftBumper.onFalse(goToCollectionPosition);
-        armRightBumper.onTrue(shootForSpeaker.withTimeout(1.0));
+        armRightBumper.whileTrue(shootForSpeaker);
 
 
         armLeftTrigger.whileTrue(goToAmpShotPosition);
         armLeftTrigger.onFalse(goToSpeakerShotPosition);
-        armRightTrigger.onTrue(shootForAmp.withTimeout(1.0));
-        // Now this is for climbing
+        armRightTrigger.whileTrue(shootForAmp);
+
+        // Now for climbing control.  Climbing requires much more power in shoulder than shooting does.
+        // Y button, while held down, causes arm to rise to vertical.
         armY.whileTrue(goToClimbPosition);
-        new Trigger(() -> m_armController.getPOV() == 180)
-          .whileTrue(new SetShoulderRPM(m_shoulder, 8.0));
+        // bottom sectors of POV are for climbing.  SW is weakest (use for engaging the chain),
+        // S can raise robot on hook two (from the top), SE can raise robot on topmost hook.
+        // All will raise as long as button is pressed.
         new Trigger (() -> m_armController.getPOV() == 225)
           .whileTrue(new SetShoulderRPM(m_shoulder, 5.0));
+        new Trigger(() -> m_armController.getPOV() == 180)
+          .whileTrue(new SetShoulderRPM(m_shoulder, 10.0));
         new Trigger (() -> m_armController.getPOV()== 135)
-          .whileTrue(new SetShoulderRPM(m_shoulder,10.0));
+          .whileTrue(new SetShoulderRPM(m_shoulder,13.0));
+        // depressing top of POV engages ratchet - cannot be undone 
         new Trigger(() -> m_armController.getPOV() == 0)
           .onTrue(new InstantCommand(() -> m_climberServo.setAngle(60)));
+
         // Now for manual control of arm and wrist
         // While left joystick is pushed forward, shoulder goes up at constant speed
         // While the 'back' button is pressed the soft limits on position will be ignored.
