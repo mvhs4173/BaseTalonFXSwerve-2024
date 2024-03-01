@@ -44,7 +44,7 @@ public class RobotContainer {
     private final Wrist m_wrist = TuningVariables.useWrist.getBoolean() ? new Wrist() : null;
     private final BeamBreakSensor m_BeamBreakSensor = new BeamBreakSensor();
     private final CollectorRoller m_CollectorRoller = TuningVariables.useCollectorRoller.getBoolean() ? new CollectorRoller() : null;
-
+    private final ClimberServo m_climberServo = new ClimberServo(0);
     /* Autos */
     private final SendableChooser<Command> m_chooser = new SendableChooser<>();
     private final 
@@ -169,6 +169,8 @@ public class RobotContainer {
           .whileTrue(new SetShoulderRPM(m_shoulder, 5.0));
         new Trigger (() -> m_armController.getPOV()== 135)
           .whileTrue(new SetShoulderRPM(m_shoulder,10.0));
+        new Trigger(() -> m_armController.getPOV() == 0)
+          .onTrue(new InstantCommand(() -> m_climberServo.setAngle(90)));
         // Now for manual control of arm and wrist
         // While left joystick is pushed forward, shoulder goes up at constant speed
         // While the 'back' button is pressed the soft limits on position will be ignored.

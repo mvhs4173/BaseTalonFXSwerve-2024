@@ -17,6 +17,10 @@ public class ClimberServo extends SubsystemBase {
     m_climberServo.setAngle(startingAngle);
   }
 
+  public ClimberServo(int channel){
+    m_climberServo = new Servo(channel);
+  }
+
   public void setAngle(double pos) {
     m_climberServo.setAngle(pos);
   }
