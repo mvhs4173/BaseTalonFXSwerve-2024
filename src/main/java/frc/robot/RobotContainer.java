@@ -170,7 +170,7 @@ public class RobotContainer {
         new Trigger (() -> m_armController.getPOV()== 135)
           .whileTrue(new SetShoulderRPM(m_shoulder,10.0));
         new Trigger(() -> m_armController.getPOV() == 0)
-          .onTrue(new InstantCommand(() -> m_climberServo.setAngle(90)));
+          .onTrue(new InstantCommand(() -> m_climberServo.setAngle(60)));
         // Now for manual control of arm and wrist
         // While left joystick is pushed forward, shoulder goes up at constant speed
         // While the 'back' button is pressed the soft limits on position will be ignored.
