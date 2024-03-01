@@ -34,6 +34,7 @@ public class ShoulderGoToPosition extends Command {
     m_shoulder = shoulder;
     m_desiredPosition = desiredPosition;
     m_absoluteValueSpeed = absoluteValueSpeed;
+    m_method = method;
     addRequirements(m_shoulder);
   }
 
@@ -61,7 +62,7 @@ public class ShoulderGoToPosition extends Command {
   @Override
   public void end(boolean interrupted) {
     m_shoulder.setPercentSpeed(0.0);
-    m_shoulder.holdPosition(); // use PID to hold, see if it works
+    //m_shoulder.holdPosition(); // use PID to hold, see if it works
   }
 
   // Returns true when the command should end.
@@ -70,6 +71,7 @@ public class ShoulderGoToPosition extends Command {
     boolean finished = m_speed >= 0
       ? m_shoulder.getPosition() >= m_desiredPosition
       : m_shoulder.getPosition() <= m_desiredPosition;
+      if (finished) System.out.println("shoulder is finished at " + m_shoulder.getPosition());
     return finished;
   }
 }

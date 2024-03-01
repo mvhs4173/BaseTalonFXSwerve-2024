@@ -81,9 +81,6 @@ public class RobotContainer {
                 () -> robotCentric.getAsBoolean()
             )
         );
-        if (m_shoulder != null){
-            m_shoulder.setDefaultCommand(new DefaultArmCommand(m_shoulder, m_armController));
-        }
 
         //Add commands to the autonomous command chooser
         m_chooser.setDefaultOption("Simple Auto", new exampleAuto(s_Swerve));
@@ -112,8 +109,8 @@ public class RobotContainer {
         /* Start assuming the m_armController is not null */
         JoystickButton armA = new JoystickButton(m_armController, XboxController.Button.kA.value);
         // JoystickButton armB = new JoystickButton(m_armController, XboxController.Button.kB.value);
-        // JoystickButton armX = new JoystickButton(m_armController, XboxController.Button.kX.value);
-        // JoystickButton armY = new JoystickButton(m_armController, XboxController.Button.kY.value);
+        // JoystickButton armX = new JoystickButton(m_armController, XboxController.Button.kX.value)
+        JoystickButton armY = new JoystickButton(m_armController, XboxController.Button.kY.value);
         JoystickButton armLeftBumper = new JoystickButton(m_armController, XboxController.Button.kLeftBumper.value);
         JoystickButton armRightBumper = new JoystickButton(m_armController, XboxController.Button.kRightBumper.value);
         JoystickButton armStart = new JoystickButton(m_armController, XboxController.Button.kStart.value);
@@ -125,22 +122,32 @@ public class RobotContainer {
 
         Command goToCollectionPosition = new ParallelCommandGroup(
             new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 3.0, 0.0)
-               .until(() -> Math.abs(m_shoulder.getPosition() - 0.0) < 0.01),
+               // .until(() -> Math.abs(m_shoulder.getPosition() - 0.0) < 0.01)
+               ,
             new WristGoToPosition(m_wrist, 0.6, 0)
         ).withTimeout(3.0);
         Command goToSpeakerShotPosition = new ParallelCommandGroup(
             new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 3.0, 0.0)
-                .until(() -> Math.abs(m_shoulder.getPosition() - 0.0) < 0.01),
+                // .until(() -> Math.abs(m_shoulder.getPosition() - 0.0) < 0.01)
+                ,
             new WristGoToPosition(m_wrist, 0.7, 0.240)
         ).withTimeout(3.0);
         Command goToAmpShotPosition = new ParallelCommandGroup(
-            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 3.0, -0.20)
-                .until(() -> Math.abs(m_shoulder.getPosition() - (-0.20)) < 0.01),
-            new WristGoToPosition(m_wrist, 0.7, 0.20)
-        ).withTimeout(4.0);
+            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 3.0, -0.21)
+                // .until(() -> Math.abs(m_shoulder.getPosition() - (-0.20)) < 0.01)
+                ,
+            new WristGoToPosition(m_wrist, 0.7, 0.23)
+        ).withTimeout(7.0);
+        // Command gotoClimbPosition = that the arm should be straight up and the shooter should be parallel with the arm, folded inside it. 
+        Command goToClimbPosition =  new ParallelCommandGroup(
+            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 5.0, -0.22)
+                //.until(() -> Math.abs(m_shoulder.getPosition() - (-0.22)) < 0.01)
+                ,
+            new WristGoToPosition(m_wrist, 0.7, 0.240)
+        ).withTimeout(5.0);
         // Command shootForSpeaker = new Shoot(m_shooter, 6500.0);
         Command shootForSpeaker = new Shoot(m_shooter);
-        Command shootForAmp = new Shoot(m_shooter, 2000.0);
+        Command shootForAmp = new Shoot(m_shooter, 5000.0);
         Command doIntake = 
           new IntakeUntilBeamBreak(m_CollectorRoller, m_BeamBreakSensor, m_shooter, 750.0).withTimeout(5.0);
         
@@ -148,12 +155,20 @@ public class RobotContainer {
 
         armLeftBumper.whileTrue(goToSpeakerShotPosition);
         armLeftBumper.onFalse(goToCollectionPosition);
-        armRightBumper.onTrue(shootForSpeaker.withTimeout(2.0));
+        armRightBumper.onTrue(shootForSpeaker.withTimeout(1.0));
+
 
         armLeftTrigger.whileTrue(goToAmpShotPosition);
-        armLeftTrigger.onFalse(goToCollectionPosition);
-        armRightTrigger.onTrue(shootForAmp.withTimeout(2.0));
-
+        armLeftTrigger.onFalse(goToSpeakerShotPosition);
+        armRightTrigger.onTrue(shootForAmp.withTimeout(1.0));
+        // Now this is for climbing
+        armY.whileTrue(goToClimbPosition);
+        new Trigger(() -> m_armController.getPOV() == 180)
+          .whileTrue(new SetShoulderRPM(m_shoulder, 8.0));
+        new Trigger (() -> m_armController.getPOV() == 225)
+          .whileTrue(new SetShoulderRPM(m_shoulder, 5.0));
+        new Trigger (() -> m_armController.getPOV()== 135)
+          .whileTrue(new SetShoulderRPM(m_shoulder,10.0));
         // Now for manual control of arm and wrist
         // While left joystick is pushed forward, shoulder goes up at constant speed
         // While the 'back' button is pressed the soft limits on position will be ignored.
