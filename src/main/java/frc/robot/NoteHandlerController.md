@@ -10,6 +10,7 @@ Rotation directions, clockwise or counter-clockwise, are as seen from the robotâ
 - **Back button** (small button to left of central Xbox symbol).  Usually the shoulder and wrist joints are constrained not to push beyond the 'soft limits'.  While the back button is pressed the motions commanded by the joysticks will not be constrained.  This is meant to be used when the robot is started in a non-resting condition: it allows you to manipulate the arm segments into resting condition and then press the start button to reset the zero points on their encoders. 
 - **Start button** (small button to right of central Xbox symbol) - [THIS DOES NOT WORK NOW] set current shoulder and wrist orientations as the zero points. Only do this when the robot is in starting position.
 - **A button** - a momentary press starts intake motors, which will run for 5 seconds
+- **B button** - while pressed this runs the intake motor backwards, to eject a note
 - **Left bumper** - move to position for shot to speaker from position very close to front of speaker (arm down to 0 degrees, shooter c. -30).  You must hold down this button until the shot is taken: the arm will move to collection position when you release it.
 - **Right bumper** - shoot for speaker, at full power.  You must hold button down until shot is done.
 - **Right & left triggers** act like the bumpers but for the amplifier shots.  Both are treated as on/off switches.

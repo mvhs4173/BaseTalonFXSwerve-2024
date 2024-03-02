@@ -47,12 +47,12 @@ public class RobotContainer {
     private final ClimberServo m_climberServo = new ClimberServo(0);
     /* Autos */
     private final SendableChooser<Command> m_chooser = new SendableChooser<>();
-    private final 
-    Command m_Auto_1 = null;
-        //put auto routine here. You may change the name so that it is more fitting than simpleAuto 
+    //put auto routines here.  Give them understandable names.
+    //In RobotContainer(), make an m_chooser.addOption() entry for each auto.
+    //null means no auto.
+    private final Command m_Auto_1 = null; // e.g., new fancyAuto(s_Swerv)
     private final Command m_Auto_2 = null;
-        //put auto routine here. You may change the name so that it is more fitting than complexAuto
-    
+        
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         TuningVariables.setAllToDefaultValues();
@@ -108,7 +108,7 @@ public class RobotContainer {
         }
         /* Start assuming the m_armController is not null */
         JoystickButton armA = new JoystickButton(m_armController, XboxController.Button.kA.value);
-        // JoystickButton armB = new JoystickButton(m_armController, XboxController.Button.kB.value);
+        JoystickButton armB = new JoystickButton(m_armController, XboxController.Button.kB.value);
         // JoystickButton armX = new JoystickButton(m_armController, XboxController.Button.kX.value)
         JoystickButton armY = new JoystickButton(m_armController, XboxController.Button.kY.value);
         JoystickButton armLeftBumper = new JoystickButton(m_armController, XboxController.Button.kLeftBumper.value);
@@ -143,6 +143,8 @@ public class RobotContainer {
           new IntakeUntilBeamBreak(m_CollectorRoller, m_BeamBreakSensor, m_shooter, 750.0).withTimeout(5.0);
         
         armA.onTrue(doIntake);
+        armB.whileTrue(new InstantCommand(() -> m_CollectorRoller.pushOut()));
+        armB.onFalse(new InstantCommand(() -> m_CollectorRoller.stop()));
 
         armLeftBumper.whileTrue(goToSpeakerShotPosition);
         armLeftBumper.onFalse(goToCollectionPosition);
