@@ -34,17 +34,11 @@ public class exampleAuto extends SequentialCommandGroup {
                 // Pass through these two interior waypoints, making an 's' curve path
                 //Must change 'Y' value by at least 0.02 somewhere in the sequence
                 List.of(
-                    //new Translation2d(Units.feetToMeters(2), Units.feetToMeters(0.02)),
-                    //new Translation2d(Units.feetToMeters(3), Units.feetToMeters(0)),
-                    new Translation2d(Units.feetToMeters(6),   Units.feetToMeters(0)),
-                    new Translation2d(Units.feetToMeters(7.5), Units.feetToMeters(.2)),
-                    new Translation2d(Units.feetToMeters(7.4), Units.feetToMeters(9.5)),
-                    new Translation2d(Units.feetToMeters(7.5), Units.feetToMeters(0)),
-                    new Translation2d(Units.feetToMeters(.5), Units.feetToMeters(0))
+                    new Translation2d(Units.feetToMeters(0.5), Units.feetToMeters(0.5))
                     ),
 
                 // End 3 meters straight ahead of where we started, facing forward
-                new Pose2d(Units.feetToMeters(0), Units.feetToMeters(0), new Rotation2d(Units.degreesToRadians(0))),
+                new Pose2d(Units.feetToMeters(1.0), Units.feetToMeters(1.0), new Rotation2d(Units.degreesToRadians(0))),
                 config);
 
         var thetaController =

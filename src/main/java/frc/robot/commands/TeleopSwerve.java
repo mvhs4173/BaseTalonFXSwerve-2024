@@ -39,9 +39,9 @@ public class TeleopSwerve extends Command {
         double strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.stickDeadband);
         double rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.stickDeadband);
 
-        translationVal = signedPower(translationVal, 2.0);
-        strafeVal = signedPower(strafeVal, 2.0);
-        rotationVal = signedPower(rotationVal, 2.0);
+        translationVal = signedPower(translationVal, 1.0);
+        strafeVal = signedPower(strafeVal, 1.0);
+        rotationVal = signedPower(rotationVal, 1.0);
 
         /* Drive */
         s_Swerve.drive(
