@@ -133,7 +133,7 @@ public class RobotContainer {
         Trigger armRightTrigger = new Trigger(() -> m_armController.getRightTriggerAxis() > 0.5);
 
         Command goToCollectionPosition = new ParallelCommandGroup(
-            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 3.0, 0.0),
+            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 4.0, 0.0),
             new WristGoToPosition(m_wrist, 0.6, 0)
         ).withTimeout(3.0);
         Command goToSpeakerShotPosition = new ParallelCommandGroup(
