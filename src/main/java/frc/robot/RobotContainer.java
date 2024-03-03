@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.autos.*;
@@ -50,7 +51,18 @@ public class RobotContainer {
     //put auto routines here.  Give them understandable names.
     //In RobotContainer(), make an m_chooser.addOption() entry for each auto.
     //null means no auto.
-    private final Command m_Auto_1 = null; // e.g., new fancyAuto(s_Swerv)
+
+    private final Command autoGoToAmpShotPosition = new ParallelCommandGroup(
+            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 10.0, -0.185),
+            new WristGoToPosition(m_wrist, 1.0, 0.23)
+        ).withTimeout(7.0);
+    private final Command autoShootForAmp = new Shoot(m_shooter, 5000.0).withTimeout(5.0);
+
+    private final Command m_Auto_1 = new SequentialCommandGroup(
+      new ampAuto(s_Swerve),
+      autoGoToAmpShotPosition,
+      autoShootForAmp
+    );
     private final Command m_Auto_2 = null;
         
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -83,8 +95,8 @@ public class RobotContainer {
         );
 
         //Add commands to the autonomous command chooser
-        m_chooser.setDefaultOption("Simple Auto", new exampleAuto(s_Swerve));
-        m_chooser.addOption("Another Auto", m_Auto_1);
+        m_chooser.setDefaultOption("Leave Starting Zone", new exampleAuto(s_Swerve));
+        m_chooser.addOption("Amp Auto", m_Auto_1);
         m_chooser.addOption("A Third Auto", m_Auto_2);
         //Put the chooser on the dashboard
         SmartDashboard.putData(m_chooser);

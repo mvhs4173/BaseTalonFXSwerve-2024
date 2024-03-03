@@ -4,6 +4,9 @@
 
 package frc.robot.subsystems;
 
+import javax.swing.text.Position;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -58,5 +61,6 @@ public class Shoulder extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Shoulder Position", getPosition());
   } 
 }
