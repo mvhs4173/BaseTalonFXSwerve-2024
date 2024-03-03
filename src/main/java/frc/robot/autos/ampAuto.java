@@ -38,7 +38,7 @@ public class ampAuto extends SequentialCommandGroup {
                     ),
 
                 // End 3 meters straight ahead of where we started, facing forward
-                new Pose2d(Units.feetToMeters(2.0), Units.feetToMeters(0.0), new Rotation2d(Units.degreesToRadians(-90.0))),
+                new Pose2d(Units.feetToMeters(1.5), Units.feetToMeters(0.0), new Rotation2d(Units.degreesToRadians(-90.0))),
                 config);
 
         var thetaController =
