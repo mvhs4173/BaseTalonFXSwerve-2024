@@ -19,7 +19,8 @@ public class Wrist extends SubsystemBase {
   private double m_percentSpeed = 0.0;
   private boolean m_isHoldingPosition;
   private double m_positionToHold;
-    
+  private double m_previousPosition = 0.0;
+
   /** Creates a new Wrist. */
   public Wrist() {
     System.out.println("Creating Wrist object");
@@ -75,5 +76,11 @@ public class Wrist extends SubsystemBase {
       }
     }
     m_motor.setPercentSpeed(m_percentSpeed);
+    //send a message if the current position is a very large distance from the previous position
+    double currentPosition = getPosition();
+    if (Math.abs(currentPosition - m_previousPosition) > 0.1){
+      System.out.println("Wrist Position Jumped from" + m_previousPosition + " to " + currentPosition);
+    }
+    m_previousPosition = currentPosition;
   }
 }
