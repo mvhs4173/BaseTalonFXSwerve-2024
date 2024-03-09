@@ -445,6 +445,99 @@
               "_glyph": 148,
               "_showGlyph": false
             }
+          },
+          "19,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/SendableChooser[0]",
+              "_title": "SendableChooser[0]",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "19,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/temp: ShoulderPos",
+              "_title": "temp: ShoulderPos",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "4,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/temp: ShouldVel",
+              "_title": "temp: ShouldVel",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "5,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/temp: Shoulder power",
+              "_title": "temp: Shoulder power",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "20,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Shoulder Position",
+              "_title": "Shoulder Position",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "20,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Wrist Position",
+              "_title": "Wrist Position",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "11,2": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Beam Break Active",
+              "_title": "Beam Break Active",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
           }
         }
       }
@@ -610,11 +703,7 @@
               "Y-axis/Automatic bounds": true,
               "Y-axis/Upper bound": 1.0,
               "Y-axis/Lower bound": -1.0,
-              "Y-axis/Unit": "ul",
-              "Visible data/SmartDashboard/Mod0Angle Current": true,
-              "Visible data/SmartDashboard/Mod1Angle Current": true,
-              "Visible data/SmartDashboard/Mod2Angle Current": true,
-              "Visible data/SmartDashboard/Mod3Angle Current": true
+              "Y-axis/Unit": "ul"
             }
           },
           "0,4": {
@@ -636,11 +725,7 @@
               "Y-axis/Automatic bounds": true,
               "Y-axis/Upper bound": 1.0,
               "Y-axis/Lower bound": -1.0,
-              "Y-axis/Unit": "ul",
-              "Visible data/SmartDashboard/Mod0Drive Current": true,
-              "Visible data/SmartDashboard/Mod1Drive Current": true,
-              "Visible data/SmartDashboard/Mod2Drive Current": true,
-              "Visible data/SmartDashboard/Mod3Drive Current": true
+              "Y-axis/Unit": "ul"
             }
           }
         }
@@ -673,8 +758,7 @@
               "Y-axis/Automatic bounds": true,
               "Y-axis/Upper bound": 1.0,
               "Y-axis/Lower bound": -1.0,
-              "Y-axis/Unit": "ul",
-              "Visible data/SmartDashboard/Left Shoulder amps": true
+              "Y-axis/Unit": "ul"
             }
           },
           "9,0": {
@@ -694,9 +778,7 @@
               "Y-axis/Automatic bounds": true,
               "Y-axis/Upper bound": 1.0,
               "Y-axis/Lower bound": -1.0,
-              "Y-axis/Unit": "ul",
-              "Visible data/SmartDashboard/Left Shoulder desired pos": true,
-              "Visible data/SmartDashboard/Left Shoulder pos": true
+              "Y-axis/Unit": "ul"
             }
           },
           "0,4": {
@@ -715,8 +797,7 @@
               "Y-axis/Automatic bounds": true,
               "Y-axis/Upper bound": 1.0,
               "Y-axis/Lower bound": -1.0,
-              "Y-axis/Unit": "ul",
-              "Visible data/SmartDashboard/Left Shoulder vel": true
+              "Y-axis/Unit": "ul"
             }
           }
         }
@@ -752,11 +833,7 @@
               "Y-axis/Automatic bounds": true,
               "Y-axis/Upper bound": 1.0,
               "Y-axis/Lower bound": -1.0,
-              "Y-axis/Unit": "ul",
-              "Visible data/SmartDashboard/Mod 0 Angle": true,
-              "Visible data/SmartDashboard/Mod 1 Angle": true,
-              "Visible data/SmartDashboard/Mod 2 Angle": true,
-              "Visible data/SmartDashboard/Mod 3 Angle": true
+              "Y-axis/Unit": "ul"
             }
           },
           "0,4": {
@@ -778,11 +855,7 @@
               "Y-axis/Automatic bounds": true,
               "Y-axis/Upper bound": 1.0,
               "Y-axis/Lower bound": -1.0,
-              "Y-axis/Unit": "ul",
-              "Visible data/SmartDashboard/Mod 0 CANcoder": true,
-              "Visible data/SmartDashboard/Mod 1 CANcoder": true,
-              "Visible data/SmartDashboard/Mod 2 CANcoder": true,
-              "Visible data/SmartDashboard/Mod 3 CANcoder": true
+              "Y-axis/Unit": "ul"
             }
           },
           "9,2": {
@@ -804,11 +877,90 @@
               "Y-axis/Automatic bounds": true,
               "Y-axis/Upper bound": 1.0,
               "Y-axis/Lower bound": -1.0,
+              "Y-axis/Unit": "ul"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Tab 7",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {
+          "0,0": {
+            "size": [
+              6,
+              4
+            ],
+            "content": {
+              "_type": "Camera Stream",
+              "_source0": "camera_server://photonvision_Port_1184_Output_MJPEG_Server",
+              "_title": "photonvision_Port_1184_Output_MJPEG_Server",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Crosshair/Show crosshair": true,
+              "Crosshair/Crosshair color": "#FFFFFFFF",
+              "Controls/Show controls": true,
+              "Controls/Rotation": "NONE",
+              "compression": 30.0,
+              "fps": -1,
+              "imageWidth": -1,
+              "imageHeight": -1
+            }
+          },
+          "6,0": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/SendableChooser[0]",
+              "_title": "/SmartDashboard/SendableChooser[0]",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "8,0": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Beam Break Active",
+              "_title": "/SmartDashboard/Beam Break Active",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "6,2": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Graph",
+              "_source0": "network_table:///SmartDashboard/Wrist Position",
+              "_title": "SmartDashboard/Wrist Position",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Graph/Visible time": 30.0,
+              "Graph/X-axis auto scrolling": true,
+              "Y-axis/Automatic bounds": true,
+              "Y-axis/Upper bound": 1.0,
+              "Y-axis/Lower bound": -1.0,
               "Y-axis/Unit": "ul",
-              "Visible data/SmartDashboard/Mod 0 Velocity": true,
-              "Visible data/SmartDashboard/Mod 1 Velocity": true,
-              "Visible data/SmartDashboard/Mod 2 Velocity": true,
-              "Visible data/SmartDashboard/Mod 3 Velocity": true
+              "Visible data/SmartDashboard/Wrist Position": true
             }
           }
         }
