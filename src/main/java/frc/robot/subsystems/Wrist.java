@@ -82,5 +82,5 @@ public class Wrist extends SubsystemBase {
       System.out.println("Wrist Position Jumped from" + m_previousPosition + " to " + currentPosition);
     }
     m_previousPosition = currentPosition;
-  }
+ }
 }

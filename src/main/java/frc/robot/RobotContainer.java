@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.autos.*;
@@ -47,12 +48,23 @@ public class RobotContainer {
     private final ClimberServo m_climberServo = new ClimberServo(0);
     /* Autos */
     private final SendableChooser<Command> m_chooser = new SendableChooser<>();
-    private final 
-    Command m_Auto_1 = null;
-        //put auto routine here. You may change the name so that it is more fitting than simpleAuto 
+    //put auto routines here.  Give them understandable names.
+    //In RobotContainer(), make an m_chooser.addOption() entry for each auto.
+    //null means no auto.
+
+    private final Command autoGoToAmpShotPosition = new ParallelCommandGroup(
+            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 10.0, -0.185),
+            new WristGoToPosition(m_wrist, 1.0, 0.23)
+        ).withTimeout(7.0);
+    private final Command autoShootForAmp = new Shoot(m_shooter, 5000.0).withTimeout(5.0);
+
+    private final Command m_Auto_1 = new SequentialCommandGroup(
+      new ampAuto(s_Swerve),
+      autoGoToAmpShotPosition,
+      autoShootForAmp
+    );
     private final Command m_Auto_2 = null;
-        //put auto routine here. You may change the name so that it is more fitting than complexAuto
-    
+        
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         TuningVariables.setAllToDefaultValues();
@@ -83,8 +95,8 @@ public class RobotContainer {
         );
 
         //Add commands to the autonomous command chooser
-        m_chooser.setDefaultOption("Simple Auto", new exampleAuto(s_Swerve));
-        m_chooser.addOption("Another Auto", m_Auto_1);
+        m_chooser.setDefaultOption("Leave Starting Zone", new exampleAuto(s_Swerve));
+        m_chooser.addOption("Amp Auto", m_Auto_1);
         m_chooser.addOption("A Third Auto", m_Auto_2);
         //Put the chooser on the dashboard
         SmartDashboard.putData(m_chooser);
@@ -108,7 +120,7 @@ public class RobotContainer {
         }
         /* Start assuming the m_armController is not null */
         JoystickButton armA = new JoystickButton(m_armController, XboxController.Button.kA.value);
-        // JoystickButton armB = new JoystickButton(m_armController, XboxController.Button.kB.value);
+        JoystickButton armB = new JoystickButton(m_armController, XboxController.Button.kB.value);
         // JoystickButton armX = new JoystickButton(m_armController, XboxController.Button.kX.value)
         JoystickButton armY = new JoystickButton(m_armController, XboxController.Button.kY.value);
         JoystickButton armLeftBumper = new JoystickButton(m_armController, XboxController.Button.kLeftBumper.value);
@@ -121,11 +133,11 @@ public class RobotContainer {
         Trigger armRightTrigger = new Trigger(() -> m_armController.getRightTriggerAxis() > 0.5);
 
         Command goToCollectionPosition = new ParallelCommandGroup(
-            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 3.0, 0.0),
-            new WristGoToPosition(m_wrist, 0.6, 0)
+            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 6.0, 0.0),
+            new WristGoToPosition(m_wrist, 0.8, 0)
         ).withTimeout(3.0);
         Command goToSpeakerShotPosition = new ParallelCommandGroup(
-            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 3.0, 0.0),
+            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 4.0, 0.0),
             new WristGoToPosition(m_wrist, 0.7, 0.240)
         ).withTimeout(7.0);
         Command goToAmpShotPosition = new ParallelCommandGroup(
@@ -143,6 +155,8 @@ public class RobotContainer {
           new IntakeUntilBeamBreak(m_CollectorRoller, m_BeamBreakSensor, m_shooter, 750.0).withTimeout(5.0);
         
         armA.onTrue(doIntake);
+        armB.whileTrue(new InstantCommand(() -> m_CollectorRoller.pushOut()));
+        armB.onFalse(new InstantCommand(() -> m_CollectorRoller.stop()));
 
         armLeftBumper.whileTrue(goToSpeakerShotPosition);
         armLeftBumper.onFalse(goToCollectionPosition);
