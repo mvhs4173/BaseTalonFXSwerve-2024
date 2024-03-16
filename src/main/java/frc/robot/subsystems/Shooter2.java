@@ -88,11 +88,26 @@ public class Shooter2 extends SubsystemBase {
   public Command shoot2Command(){
     Command command =
           new InstantCommand(() -> setMainRollerPercentSpeedForShooting(0.6))
-              .wait(1000)
+              .withTimeout(1.0)
               .andThen(new InstantCommand(() -> setIndexerPercentSpeedForShooting(.6)))
-              .wait(1000)
-              .andThen(new InstantCommand(() -> stopIndexer()))
-              .andThen(new InstantCommand(() -> stopMainRoller()));
+              .withTimeout(1.0)
+              .finallyDo(() -> { stopIndexer(); stopMainRoller();});
+    return command;
+  }
+
+  /**
+   * Create a command to run intake until the beam break sensor is trigger, or it times out.
+   * @param beamBreakSensor - the beam break sensor at the back of the shooter
+   * @param timeOut - stop if beam is not broken in this time (seconds)
+   * @return a command to do the intake
+   */
+  public Command intake2UntilBeamBreak(BeamBreakSensor beamBreakSensor, double timeOut){
+    Command command =
+      new InstantCommand(() -> setIndexerPercentSpeedForIntake(0.6))
+          .andThen(new InstantCommand(() -> setMainRollerPercentSpeedForIntake(0.6)))
+          .until(() -> beamBreakSensor.noteIsInShooter())
+          .withTimeout(2.0)
+          .finallyDo(() -> { stopIndexer(); stopMainRoller();});
     return command;
   }
 }
