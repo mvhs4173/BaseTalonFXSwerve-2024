@@ -20,7 +20,13 @@
         {
           "type": "named",
           "data": {
-            "name": "GoToAmpShotPosition"
+            "name": "GoToAmpPosition"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 4.0
           }
         },
         {
@@ -30,9 +36,15 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "LowerArm"
+            "name": "GoToCollectionPosition"
           }
         }
       ]

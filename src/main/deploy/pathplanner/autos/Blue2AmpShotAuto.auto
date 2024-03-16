@@ -18,15 +18,51 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "GoToAmpShotPosition"
+          }
+        },
+        {
           "type": "wait",
           "data": {
-            "waitTime": 3.0
+            "waitTime": 4.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "RetrieveNoteBlue"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "GoToCollectionPosition"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Collect"
           }
         },
         {
@@ -39,6 +75,24 @@
           "type": "path",
           "data": {
             "pathName": "GoBackToAmpBlue"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "GoToAmpPosition"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 4.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
           }
         }
       ]

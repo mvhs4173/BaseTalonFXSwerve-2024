@@ -1,5 +1,8 @@
 package frc.robot;
 
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -57,14 +60,14 @@ public class RobotContainer {
             new WristGoToPosition(m_wrist, 1.0, 0.23)
         ).withTimeout(7.0);
     private final Command autoShootForAmp = new Shoot(m_shooter, 5000.0).withTimeout(5.0);
-
+    
     private final Command m_Auto_1 = new SequentialCommandGroup(
       new ampAuto(s_Swerve),
       autoGoToAmpShotPosition,
       autoShootForAmp
     );
-    private final Command m_Auto_2 = null;
-        
+    private final Command m_Blue1AmpShotAuto = new PathPlannerAuto("Blue1AmpShotAuto");
+    private final Command m_Blue2AmpShotAuto = new PathPlannerAuto("Blue2AmpShotAuto");     
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         TuningVariables.setAllToDefaultValues();
@@ -90,14 +93,36 @@ public class RobotContainer {
                 () -> -m_driveController.getRawAxis(translationAxis), 
                 () -> -m_driveController.getRawAxis(strafeAxis), 
                 () -> -m_driveController.getRawAxis(rotationAxis), 
-                () -> robotCentric.getAsBoolean()
-            )
-        );
+                () -> robotCentric.getAsBoolean())
+            );
+            
+            //PathPlanner auto named commands
+            Command goToAmpShotPosition = new ParallelCommandGroup(
+              new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 10.0, -0.185),
+              new WristGoToPosition(m_wrist, 1.0, 0.23)
+              ).withTimeout(7.0);
+           Command shootForAmp = new Shoot(m_shooter, 5000.0);
+           Command goToCollectionPosition = new ParallelCommandGroup(
+            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 6.0, 0.0),
+            new WristGoToPosition(m_wrist, 0.8, 0)
+        ).withTimeout(3.0);
+        Command doIntake = 
+          new IntakeUntilBeamBreak(m_CollectorRoller, m_BeamBreakSensor, m_shooter, 750.0).withTimeout(5.0);
+        
+            //Register Named Commands
+            NamedCommands.registerCommand("GoToAmpPosition", goToAmpShotPosition);
+            NamedCommands.registerCommand("Shoot", shootForAmp);
+            NamedCommands.registerCommand("GoToCollectionPosition", goToCollectionPosition);
+            NamedCommands.registerCommand("Collect", doIntake);
+            
+
+      
 
         //Add commands to the autonomous command chooser
         m_chooser.setDefaultOption("Leave Starting Zone", new exampleAuto(s_Swerve));
         m_chooser.addOption("Amp Auto", m_Auto_1);
-        m_chooser.addOption("A Third Auto", m_Auto_2);
+        m_chooser.addOption("Amp Shot Auto", m_Blue1AmpShotAuto);
+        m_chooser.addOption("Amp Shot 2 Auto", m_Blue2AmpShotAuto);
         //Put the chooser on the dashboard
         SmartDashboard.putData(m_chooser);
 
@@ -212,4 +237,4 @@ public class RobotContainer {
         // An ExampleCommand will run in autonomous
         return m_chooser.getSelected();
     }
-}
+  }
