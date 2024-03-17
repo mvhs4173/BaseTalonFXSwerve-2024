@@ -254,4 +254,26 @@ public final class Constants {
         public static final boolean normallyOpen = true;
         public static final String name = "BeamBreak";
     }
+
+    public static class Shooter2Constants{
+        public static class UpperRoller{ // a NEO
+            public static final int kCANId = 41;
+            public static final MotorType kMotorType = MotorType.kBrushless;
+            public static final double encoderRotationsPerFinalRotation = 1.0;
+            public static final String name = "Upper Shooter2 Roller";
+        }
+        public static class LowerRoller{ // a NEO
+            public static final int kCANId = 40;
+            public static final MotorType kMotorType = MotorType.kBrushless;
+            public static final double encoderRotationsPerFinalRotation = 1.0;
+            public static final String name = "Lower Shooter2 Roller";
+        }
+        public static class Indexer{ // a NEO 550
+            public static final int kCANId = 42;
+            public static final MotorType kMotorType = MotorType.kBrushless;
+            public static final double encoderRotationsPerFinalRotation = 10.0 / 1.0 // planetary gearbox
+                                                                        * 22.0 / 48.0; // sprockets
+            public static final String name = "Shooter2 Indexer";
+        }
+    }
 }

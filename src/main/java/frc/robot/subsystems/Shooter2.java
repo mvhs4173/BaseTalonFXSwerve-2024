@@ -22,15 +22,15 @@ public class Shooter2 extends SubsystemBase {
   /** Creates a new Shooter2. */
   public Shooter2() {
     m_lowerRoller = new SparkMaxMotor(
-      Constants.Shooter2Constants.LowerRoller.kCANid,
+      Constants.Shooter2Constants.LowerRoller.kCANId,
       Constants.Shooter2Constants.LowerRoller.encoderRotationsPerFinalRotation,
       Constants.Shooter2Constants.LowerRoller.name);
     m_upperRoller = new SparkMaxMotor(
-      Constants.Shooter2Constants.UpperRoller.kCANid,
+      Constants.Shooter2Constants.UpperRoller.kCANId,
       Constants.Shooter2Constants.UpperRoller.encoderRotationsPerFinalRotation,
       Constants.Shooter2Constants.UpperRoller.name);
     m_indexer = new SparkMaxMotor(
-      Constants.Shooter2Constants.Indexer.kCANid,
+      Constants.Shooter2Constants.Indexer.kCANId,
       Constants.Shooter2Constants.Indexer.encoderRotationsPerFinalRotation,
       Constants.Shooter2Constants.Indexer.name);
   }
