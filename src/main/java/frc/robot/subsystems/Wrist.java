@@ -6,16 +6,10 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+// import frc.robot.Constants;
 
 public class Wrist extends SubsystemBase {
-  private SparkMaxMotor m_motor = new SparkMaxMotor(
-    Constants.WristConstants.kCANId,
-    Constants.WristConstants.encoderRotationsPerFinalRotation,
-    Constants.WristConstants.kName,
-    Constants.WristConstants.kMotorType,
-    Constants.WristConstants.encoderType,
-    Constants.WristConstants.encoderCountsPerRevolution);
+  private SparkMaxMotor m_motor;
   private double m_percentSpeed = 0.0;
   private boolean m_isHoldingPosition;
   private double m_positionToHold;
@@ -24,10 +18,20 @@ public class Wrist extends SubsystemBase {
   /** Creates a new Wrist. */
   public Wrist() {
     System.out.println("Creating Wrist object");
+    throw new Error("You must use wrist2 instead of wrist, the Bosch brushed seat motor with external encoder and worm gear has been replaced by a NEO with a big gear ratio");
+  /*
+    m_motor = new SparkMaxMotor(
+      Constants.WristConstants.kCANId,
+      Constants.WristConstants.encoderRotationsPerFinalRotation,
+      Constants.WristConstants.kName,
+      Constants.WristConstants.kMotorType,
+      Constants.WristConstants.encoderType,
+      Constants.WristConstants.encoderCountsPerRevolution);
     m_motor.setToBrakeOnIdle(true);
     m_isHoldingPosition = false;
     m_motor.setAndEnableLowerSoftLimit(Constants.WristConstants.lowerSoftLimit); // 0.0
     m_motor.setAndEnableUpperSoftLimit(Constants.WristConstants.upperSoftLimit); // 0.28 or so
+  */  
   }
 
   /**

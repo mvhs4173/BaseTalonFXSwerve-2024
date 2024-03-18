@@ -276,4 +276,12 @@ public final class Constants {
             public static final String name = "Shooter2 Indexer";
         }
     }
+    public static class Wrist2Constants{
+        public static final int kCANId = 12; // TODO : get the can id from programmers' notebook
+        public static final double encoderRotationsPerFinalRotation = 7.0 * 7.0 // planetary gearbox
+                                                                    * 48.0 / 16.0; // sprockets
+        public static final String name = "Wrist2";
+        public static double lowerSoftLimit = 0.0; // in rotations of wrist
+        public static double upperSoftLimit = 0.28; // TODO: check this empirically
+    }
 }

@@ -44,8 +44,8 @@ public class RobotContainer {
     /* Subsystems */
     private final Swerve s_Swerve = TuningVariables.useSwerve.getBoolean() ? new Swerve() : null; // set s_Swerve to null when testing arm & shooter alone
     private final Shoulder m_shoulder = TuningVariables.useShoulder.getBoolean() ? new Shoulder() : null;
-    private final Shooter m_shooter = TuningVariables.useShooter.getBoolean() ? new Shooter() : null;
-    private final Wrist m_wrist = TuningVariables.useWrist.getBoolean() ? new Wrist() : null;
+    private final Shooter2 m_shooter2 = TuningVariables.useShooter2.getBoolean() ? new Shooter2() : null;
+    private final Wrist2 m_wrist2 = TuningVariables.useWrist2.getBoolean() ? new Wrist2() : null;
     private final BeamBreakSensor m_BeamBreakSensor = new BeamBreakSensor();
     private final CollectorRoller m_CollectorRoller = TuningVariables.useCollectorRoller.getBoolean() ? new CollectorRoller() : null;
     private final ClimberServo m_climberServo = new ClimberServo(0);
@@ -57,14 +57,13 @@ public class RobotContainer {
 
     private final Command autoGoToAmpShotPosition = new ParallelCommandGroup(
             new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 10.0, -0.185),
-            new WristGoToPosition(m_wrist, 1.0, 0.23)
+            new Wrist2GoToPosition(m_wrist2, 0.06, 0.23)
         ).withTimeout(7.0);
-    private final Command autoShootForAmp = new Shoot(m_shooter, 5000.0).withTimeout(5.0);
     
     private final Command m_Auto_1 = new SequentialCommandGroup(
       new ampAuto(s_Swerve),
       autoGoToAmpShotPosition,
-      autoShootForAmp
+      m_shooter2.shoot2Command().withTimeout(5.0)
     );
     private final Command m_Blue1AmpShotAuto = new PathPlannerAuto("Blue1AmpShotAuto");
     private final Command m_Blue2AmpShotAuto = new PathPlannerAuto("Blue2AmpShotAuto");     
@@ -96,27 +95,7 @@ public class RobotContainer {
                 () -> robotCentric.getAsBoolean())
             );
             
-            //PathPlanner auto named commands
-            Command goToAmpShotPosition = new ParallelCommandGroup(
-              new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 10.0, -0.185),
-              new WristGoToPosition(m_wrist, 1.0, 0.23)
-              ).withTimeout(7.0);
-           Command shootForAmp = new Shoot(m_shooter, 5000.0);
-           Command goToCollectionPosition = new ParallelCommandGroup(
-            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 6.0, 0.0),
-            new WristGoToPosition(m_wrist, 0.8, 0)
-        ).withTimeout(3.0);
-        Command doIntake = 
-          new IntakeUntilBeamBreak(m_CollectorRoller, m_BeamBreakSensor, m_shooter, 750.0).withTimeout(5.0);
-        
-            //Register Named Commands
-            NamedCommands.registerCommand("GoToAmpPosition", goToAmpShotPosition);
-            NamedCommands.registerCommand("Shoot", shootForAmp);
-            NamedCommands.registerCommand("GoToCollectionPosition", goToCollectionPosition);
-            NamedCommands.registerCommand("Collect", doIntake);
-            
-
-      
+        registerNamedPathPlannerCommands();
 
         //Add commands to the autonomous command chooser
         m_chooser.setDefaultOption("Leave Starting Zone", new exampleAuto(s_Swerve));
@@ -130,6 +109,25 @@ public class RobotContainer {
         configureButtonBindings();
         SmartDashboard.putData("Remove all preferences", new InstantCommand(TuningVariables::removeAllPreferences)); 
         SmartDashboard.putData("Set All TuningVariables to default values", new InstantCommand(TuningVariables::setAllToDefaultValues)); 
+    }
+
+    private void registerNamedPathPlannerCommands(){
+      //PathPlanner autos use "named commands", which must be registered
+      Command goToAmpShotPosition = new ParallelCommandGroup(
+        new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 10.0, -0.185),
+        new Wrist2GoToPosition(m_wrist2, 0.06, 0.23)
+      ).withTimeout(7.0);
+      Command shoot2ForAmp = m_shooter2.shoot2Command();
+      Command goToCollectionPosition = new ParallelCommandGroup(
+        new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 6.0, 0.0),
+        new Wrist2GoToPosition(m_wrist2, 0.06, 0)
+      ).withTimeout(3.0);
+      Command doIntake = m_shooter2.intake2UntilBeamBreak(m_CollectorRoller, m_BeamBreakSensor); 
+
+      NamedCommands.registerCommand("GoToAmpPosition", goToAmpShotPosition);
+      NamedCommands.registerCommand("Shoot", shoot2ForAmp);
+      NamedCommands.registerCommand("GoToCollectionPosition", goToCollectionPosition);
+      NamedCommands.registerCommand("Collect", doIntake);      
     }
 
     /**
@@ -159,25 +157,24 @@ public class RobotContainer {
 
         Command goToCollectionPosition = new ParallelCommandGroup(
             new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 6.0, 0.0),
-            new WristGoToPosition(m_wrist, 0.8, 0)
+            new Wrist2GoToPosition(m_wrist2, 0.04, 0)
         ).withTimeout(3.0);
         Command goToSpeakerShotPosition = new ParallelCommandGroup(
             new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 4.0, 0.0),
-            new WristGoToPosition(m_wrist, 0.7, 0.240)
+            new Wrist2GoToPosition(m_wrist2, 0.04, 0.240)
         ).withTimeout(7.0);
         Command goToAmpShotPosition = new ParallelCommandGroup(
             new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 10.0, -0.185),
-            new WristGoToPosition(m_wrist, 1.0, 0.23)
+            new Wrist2GoToPosition(m_wrist2, 0.1, 0.23)
         ).withTimeout(7.0);
         // Command gotoClimbPosition = that the arm should be straight up and the shooter should be parallel with the arm, folded inside it. 
         Command goToClimbPosition =  new ParallelCommandGroup(
             new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 5.0, -0.22),
-            new WristGoToPosition(m_wrist, 0.7, 0.240)
+            new Wrist2GoToPosition(m_wrist2, 0.03, 0.240)
         ).withTimeout(7.0);
-        Command shootForSpeaker = new Shoot(m_shooter); // full blast (c. 6000)
-        Command shootForAmp = new Shoot(m_shooter, 5000.0);
-        Command doIntake = 
-          new IntakeUntilBeamBreak(m_CollectorRoller, m_BeamBreakSensor, m_shooter, 750.0).withTimeout(5.0);
+        Command shootForSpeaker = m_shooter2.shoot2Command(); // full blast (c. 6000)
+        Command shootForAmp = m_shooter2.shoot2Command();
+        Command doIntake = m_shooter2.intake2UntilBeamBreak(m_CollectorRoller, m_BeamBreakSensor);
         
         armA.onTrue(doIntake);
         armB.whileTrue(new InstantCommand(() -> m_CollectorRoller.pushOut()));
@@ -218,13 +215,13 @@ public class RobotContainer {
           .whileTrue(new SetShoulderRPM(m_shoulder, 3.0, armBack));
         // Right joystick controls wrist in similar way
         new Trigger(() -> m_armController.getRightY() < -0.5)
-          .whileTrue(new SetWristPercentSpeed(m_wrist, 0.6, armBack));
+          .whileTrue(new SetWrist2PercentSpeed(m_wrist2, 0.05, armBack));
         new Trigger(() -> m_armController.getRightY() > 0.5)
-          .whileTrue(new SetWristPercentSpeed(m_wrist, -0.5, armBack));
+          .whileTrue(new SetWrist2PercentSpeed(m_wrist2, -0.04, armBack));
         // press right stick button to hold wrist at current position
-        armRightStick.onTrue(new InstantCommand(m_wrist::holdPosition));
+        armRightStick.onTrue(new InstantCommand(m_wrist2::stop));
         armStart.onTrue(
-            new InstantCommand(() -> m_wrist.setCurrentPositionAsZeroEncoderPosition())
+            new InstantCommand(() -> m_wrist2.setCurrentPositionAsZeroEncoderPosition())
             .andThen(new InstantCommand(() -> m_shoulder.setCurrentPositionAsZeroEncoderPosition())));
     }
 

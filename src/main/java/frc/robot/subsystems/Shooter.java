@@ -15,8 +15,8 @@ public class Shooter extends SubsystemBase {
   private final SparkMaxMotor m_rightMotor;
   private double m_rpm;
   private double m_percentSpeed;
-  private boolean m_debug = true;
-  /** Creates a new Shooter. */
+
+  /** Creates a new [old style] Shooter. */
   public Shooter() {
     m_leftMotor = new SparkMaxMotor(Constants.ShooterConstants.Left.kCANId,
       Constants.ShooterConstants.encoderRotationsPerFinalRotation,

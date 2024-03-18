@@ -31,9 +31,9 @@ public enum TuningVariables {
     /** false means to not create swerve drive object */
     useSwerve(true),
     /** false means to create and use shooter motors */
-    useShooter(true),
-    /** false means to not create wrist motor object */
-    useWrist(true),
+    useShooter2(true),
+    /** false means to not create wrist v.2 motor object */
+    useWrist2(true),
     /** false means to not create shoulder motor objects */
     useShoulder(true),
     /** true means to use driver's Xbox controller object.  If so, it will be in port 0.

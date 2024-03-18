@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 /**
  * The shooter built for the second competition.  Has top and bottom rollers
@@ -88,9 +89,9 @@ public class Shooter2 extends SubsystemBase {
   public Command shoot2Command(){
     Command command =
           new InstantCommand(() -> setMainRollerPercentSpeedForShooting(0.6))
-              .withTimeout(1.0)
+              .andThen(new WaitCommand(0.5))
               .andThen(new InstantCommand(() -> setIndexerPercentSpeedForShooting(.6)))
-              .withTimeout(1.0)
+              .andThen(new WaitCommand(1.0))
               .finallyDo(() -> { stopIndexer(); stopMainRoller();});
     return command;
   }
@@ -101,13 +102,15 @@ public class Shooter2 extends SubsystemBase {
    * @param timeOut - stop if beam is not broken in this time (seconds)
    * @return a command to do the intake
    */
-  public Command intake2UntilBeamBreak(BeamBreakSensor beamBreakSensor, double timeOut){
+  public Command intake2UntilBeamBreak(CollectorRoller collectorRoller, BeamBreakSensor beamBreakSensor){
+    double timeOut = 5.0;
     Command command =
-      new InstantCommand(() -> setIndexerPercentSpeedForIntake(0.6))
-          .andThen(new InstantCommand(() -> setMainRollerPercentSpeedForIntake(0.6)))
+      new InstantCommand(() -> collectorRoller.pullIn())
+          .andThen(new InstantCommand(() -> setIndexerPercentSpeedForIntake(0.3)))
+          .andThen(new InstantCommand(() -> setMainRollerPercentSpeedForIntake(0.3)))
           .until(() -> beamBreakSensor.noteIsInShooter())
-          .withTimeout(2.0)
-          .finallyDo(() -> { stopIndexer(); stopMainRoller();});
+          .withTimeout(timeOut)
+          .finallyDo(() -> { stopIndexer(); stopMainRoller(); collectorRoller.stop();});
     return command;
   }
 }
