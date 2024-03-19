@@ -63,7 +63,7 @@ public class RobotContainer {
     private final Command m_Auto_1 = new SequentialCommandGroup(
       new ampAuto(s_Swerve),
       autoGoToAmpShotPosition,
-      m_shooter2.shoot2Command().withTimeout(5.0)
+      m_shooter2.shoot2ForAmpCommand().withTimeout(5.0)
     );
     //private final Command m_Blue1AmpShotAuto = new PathPlannerAuto("Blue1AmpShotAuto");
     //private final Command m_Blue2AmpShotAuto = new PathPlannerAuto("Blue2AmpShotAuto");     
@@ -117,7 +117,7 @@ public class RobotContainer {
         new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 10.0, -0.185),
         new Wrist2GoToPosition(m_wrist2, 0.06, 0.23)
       ).withTimeout(7.0);
-      Command shoot2ForAmp = m_shooter2.shoot2Command();
+      Command shoot2ForAmp = m_shooter2.shoot2ForAmpCommand();
       Command goToCollectionPosition = new ParallelCommandGroup(
         new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 6.0, 0.0),
         new Wrist2GoToPosition(m_wrist2, 0.06, 0)
@@ -155,25 +155,29 @@ public class RobotContainer {
         Trigger armLeftTrigger = new Trigger(() -> m_armController.getLeftTriggerAxis() > 0.5 );
         Trigger armRightTrigger = new Trigger(() -> m_armController.getRightTriggerAxis() > 0.5);
 
-        Command goToCollectionPosition = new ParallelCommandGroup(
-            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 6.0, 0.0),
-            new Wrist2GoToPosition(m_wrist2, 0.04, 0)
+        Command goToCollectionPositionFromSpeaker = new ParallelCommandGroup(
+            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 0.1, 0.0),
+            new Wrist2GoToPosition(m_wrist2, 0.2, 0)
         ).withTimeout(3.0);
+        Command goToCollectionPositionFromAmp = new ParallelCommandGroup(
+            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 8.0, 0.0),
+            new Wrist2GoToPosition(m_wrist2, 0.1, 0)
+        ).withTimeout(4.0);
         Command goToSpeakerShotPosition = new ParallelCommandGroup(
-            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 4.0, 0.0),
-            new Wrist2GoToPosition(m_wrist2, 0.04, 0.240)
+            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 0.1, 0.0),
+            new Wrist2GoToPosition(m_wrist2, 0.25, 0.220)
         ).withTimeout(7.0);
         Command goToAmpShotPosition = new ParallelCommandGroup(
-            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 10.0, -0.185),
-            new Wrist2GoToPosition(m_wrist2, 0.1, 0.23)
+            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 8.0, -0.185),
+            new Wrist2GoToPosition(m_wrist2, 0.25, 0.23)
         ).withTimeout(7.0);
         // Command gotoClimbPosition = that the arm should be straight up and the shooter should be parallel with the arm, folded inside it. 
         Command goToClimbPosition =  new ParallelCommandGroup(
             new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 5.0, -0.22),
             new Wrist2GoToPosition(m_wrist2, 0.03, 0.240)
         ).withTimeout(7.0);
-        Command shootForSpeaker = m_shooter2.shoot2Command(); // full blast (c. 6000)
-        Command shootForAmp = m_shooter2.shoot2Command();
+        Command shootForSpeaker = m_shooter2.shoot2ForSpeakerCommand(); // full blast (c. 6000)
+        Command shootForAmp = m_shooter2.shoot2ForAmpCommand();
         Command doIntake = m_shooter2.intake2UntilBeamBreak(m_CollectorRoller, m_BeamBreakSensor);
         
         armA.onTrue(doIntake);
@@ -181,12 +185,12 @@ public class RobotContainer {
         armB.onFalse(new InstantCommand(() -> m_CollectorRoller.stop()));
 
         armLeftBumper.whileTrue(goToSpeakerShotPosition);
-        armLeftBumper.onFalse(goToCollectionPosition);
+        armLeftBumper.onFalse(goToCollectionPositionFromSpeaker);
         armRightBumper.whileTrue(shootForSpeaker);
 
 
         armLeftTrigger.whileTrue(goToAmpShotPosition);
-        armLeftTrigger.onFalse(goToSpeakerShotPosition);
+        armLeftTrigger.onFalse(goToCollectionPositionFromAmp);
         armRightTrigger.whileTrue(shootForAmp);
 
         // Now for climbing control.  Climbing requires much more power in shoulder than shooting does.

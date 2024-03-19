@@ -87,13 +87,21 @@ public class Shooter2 extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  public Command shoot2Command(){
+  public Command shoot2ForSpeakerCommand(){
     Command command =
-          new InstantCommand(() -> setMainRollerPercentSpeedForShooting(0.6))
-              .andThen(new WaitCommand(0.5))
-              .andThen(new InstantCommand(() -> setIndexerPercentSpeedForShooting(.6)))
+          new InstantCommand(() -> setMainRollerPercentSpeedForShooting(0.8))
               .andThen(new WaitCommand(1.0))
-              .finallyDo(() -> { stopIndexer(); stopMainRoller();});
+              .andThen(new InstantCommand(() -> setIndexerPercentSpeedForShooting(.8)))
+              .andThen(new WaitCommand(1.5))
+              .finallyDo(() -> {stopIndexer(); stopMainRoller();});
+    return command;
+  }
+
+  public Command shoot2ForAmpCommand(){
+    Command command =
+          new InstantCommand(() -> {setMainRollerPercentSpeedForShooting(0.4); setIndexerPercentSpeedForShooting(0.6);})
+              .andThen(new WaitCommand(2.5))
+              .finallyDo(() -> {stopIndexer(); stopMainRoller();});
     return command;
   }
 
