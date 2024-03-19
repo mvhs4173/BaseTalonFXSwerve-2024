@@ -157,19 +157,19 @@ public class RobotContainer {
 
         Command goToCollectionPositionFromSpeaker = new ParallelCommandGroup(
             new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 0.1, 0.0),
-            new Wrist2GoToPosition(m_wrist2, 0.2, 0)
+            new Wrist2GoToPosition(m_wrist2, 0.3, 0)
         ).withTimeout(3.0);
         Command goToCollectionPositionFromAmp = new ParallelCommandGroup(
-            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 8.0, 0.0),
-            new Wrist2GoToPosition(m_wrist2, 0.1, 0)
+            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 10.0, 0.0),
+            new Wrist2GoToPosition(m_wrist2, 0.2, 0)
         ).withTimeout(4.0);
         Command goToSpeakerShotPosition = new ParallelCommandGroup(
             new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 0.1, 0.0),
-            new Wrist2GoToPosition(m_wrist2, 0.25, 0.215)
+            new Wrist2GoToPosition(m_wrist2, 0.35, 0.215)
         ).withTimeout(7.0);
         Command goToAmpShotPosition = new ParallelCommandGroup(
-            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 8.0, -0.185),
-            new Wrist2GoToPosition(m_wrist2, 0.25, 0.23)
+            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 10.0, -0.175),
+            new Wrist2GoToPosition(m_wrist2, 0.35, 0.22)
         ).withTimeout(7.0);
         // Command gotoClimbPosition = that the arm should be straight up and the shooter should be parallel with the arm, folded inside it. 
         Command goToClimbPosition =  new ParallelCommandGroup(
