@@ -108,9 +108,13 @@ public class Shooter2 extends SubsystemBase {
       new InstantCommand(() -> collectorRoller.pullIn())
           .andThen(new InstantCommand(() -> setIndexerPercentSpeedForIntake(0.3)))
           .andThen(new InstantCommand(() -> setMainRollerPercentSpeedForIntake(0.3)))
+
+          .andThen(new InstantCommand(() -> System.out.println("Intake2UntilBeamBreal: waiting for noteIsInShooter")))
           .until(() -> beamBreakSensor.noteIsInShooter())
+          .andThen(new InstantCommand(() -> System.out.println("   note is in shooter")))
           .withTimeout(timeOut)
-          .finallyDo(() -> { stopIndexer(); stopMainRoller(); collectorRoller.stop();});
+          // .finallyDo(() -> { stopIndexer(); stopMainRoller(); collectorRoller.stop();})
+          ;
     return command;
   }
 }

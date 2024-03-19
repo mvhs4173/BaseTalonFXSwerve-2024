@@ -1,7 +1,7 @@
 package frc.robot;
 
-import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.PathPlannerAuto;
+//import com.pathplanner.lib.auto.NamedCommands;
+//import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -65,8 +65,8 @@ public class RobotContainer {
       autoGoToAmpShotPosition,
       m_shooter2.shoot2Command().withTimeout(5.0)
     );
-    private final Command m_Blue1AmpShotAuto = new PathPlannerAuto("Blue1AmpShotAuto");
-    private final Command m_Blue2AmpShotAuto = new PathPlannerAuto("Blue2AmpShotAuto");     
+    //private final Command m_Blue1AmpShotAuto = new PathPlannerAuto("Blue1AmpShotAuto");
+    //private final Command m_Blue2AmpShotAuto = new PathPlannerAuto("Blue2AmpShotAuto");     
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         TuningVariables.setAllToDefaultValues();
@@ -95,13 +95,13 @@ public class RobotContainer {
                 () -> robotCentric.getAsBoolean())
             );
             
-        registerNamedPathPlannerCommands();
+        //registerNamedPathPlannerCommands();
 
         //Add commands to the autonomous command chooser
         m_chooser.setDefaultOption("Leave Starting Zone", new exampleAuto(s_Swerve));
         m_chooser.addOption("Amp Auto", m_Auto_1);
-        m_chooser.addOption("Amp Shot Auto", m_Blue1AmpShotAuto);
-        m_chooser.addOption("Amp Shot 2 Auto", m_Blue2AmpShotAuto);
+        //m_chooser.addOption("Amp Shot Auto", m_Blue1AmpShotAuto);
+        //m_chooser.addOption("Amp Shot 2 Auto", m_Blue2AmpShotAuto);
         //Put the chooser on the dashboard
         SmartDashboard.putData(m_chooser);
 
@@ -124,10 +124,10 @@ public class RobotContainer {
       ).withTimeout(3.0);
       Command doIntake = m_shooter2.intake2UntilBeamBreak(m_CollectorRoller, m_BeamBreakSensor); 
 
-      NamedCommands.registerCommand("GoToAmpPosition", goToAmpShotPosition);
-      NamedCommands.registerCommand("Shoot", shoot2ForAmp);
-      NamedCommands.registerCommand("GoToCollectionPosition", goToCollectionPosition);
-      NamedCommands.registerCommand("Collect", doIntake);      
+      //NamedCommands.registerCommand("GoToAmpPosition", goToAmpShotPosition);
+      //NamedCommands.registerCommand("Shoot", shoot2ForAmp);
+      //NamedCommands.registerCommand("GoToCollectionPosition", goToCollectionPosition);
+      //NamedCommands.registerCommand("Collect", doIntake);      
     }
 
     /**
