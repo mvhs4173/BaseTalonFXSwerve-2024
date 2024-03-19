@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants;
 /**
  * The shooter built for the second competition.  Has top and bottom rollers
@@ -108,12 +109,11 @@ public class Shooter2 extends SubsystemBase {
       new InstantCommand(() -> collectorRoller.pullIn())
           .andThen(new InstantCommand(() -> setIndexerPercentSpeedForIntake(0.3)))
           .andThen(new InstantCommand(() -> setMainRollerPercentSpeedForIntake(0.3)))
-
           .andThen(new InstantCommand(() -> System.out.println("Intake2UntilBeamBreal: waiting for noteIsInShooter")))
-          .until(() -> beamBreakSensor.noteIsInShooter())
+          .andThen(new WaitUntilCommand(() -> beamBreakSensor.noteIsInShooter()))
           .andThen(new InstantCommand(() -> System.out.println("   note is in shooter")))
           .withTimeout(timeOut)
-          // .finallyDo(() -> { stopIndexer(); stopMainRoller(); collectorRoller.stop();})
+          .finallyDo(() -> { stopIndexer(); stopMainRoller(); collectorRoller.stop();})
           ;
     return command;
   }
