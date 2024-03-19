@@ -165,7 +165,7 @@ public class RobotContainer {
         ).withTimeout(4.0);
         Command goToSpeakerShotPosition = new ParallelCommandGroup(
             new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 0.1, 0.0),
-            new Wrist2GoToPosition(m_wrist2, 0.25, 0.220)
+            new Wrist2GoToPosition(m_wrist2, 0.25, 0.215)
         ).withTimeout(7.0);
         Command goToAmpShotPosition = new ParallelCommandGroup(
             new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 8.0, -0.185),

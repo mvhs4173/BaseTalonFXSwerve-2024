@@ -89,9 +89,9 @@ public class Shooter2 extends SubsystemBase {
 
   public Command shoot2ForSpeakerCommand(){
     Command command =
-          new InstantCommand(() -> setMainRollerPercentSpeedForShooting(0.8))
+          new InstantCommand(() -> setMainRollerPercentSpeedForShooting(0.9))
               .andThen(new WaitCommand(1.0))
-              .andThen(new InstantCommand(() -> setIndexerPercentSpeedForShooting(.8)))
+              .andThen(new InstantCommand(() -> setIndexerPercentSpeedForShooting(.9)))
               .andThen(new WaitCommand(1.5))
               .finallyDo(() -> {stopIndexer(); stopMainRoller();});
     return command;
