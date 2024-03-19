@@ -219,7 +219,7 @@ public class RobotContainer {
         new Trigger(() -> m_armController.getRightY() > 0.5)
           .whileTrue(new SetWrist2PercentSpeed(m_wrist2, -0.04, armBack));
         // press right stick button to hold wrist at current position
-        armRightStick.onTrue(new InstantCommand(m_wrist2::stop));
+        armRightStick.onTrue(new InstantCommand(m_wrist2::holdPosition, m_wrist2));
         armStart.onTrue(
             new InstantCommand(() -> m_wrist2.setCurrentPositionAsZeroEncoderPosition())
             .andThen(new InstantCommand(() -> m_shoulder.setCurrentPositionAsZeroEncoderPosition())));
