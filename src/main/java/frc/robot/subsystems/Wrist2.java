@@ -35,10 +35,7 @@ public class Wrist2 extends SubsystemBase {
    * @param percentSpeed - speed on scale of [-1,1]
    */
   public void setPercentSpeed(double percentSpeed){
-    if (m_isHoldingPosition) {
-      m_isHoldingPosition = false;
-      System.out.println("Wrist2 no longer is trying to hold its position");
-    }
+    disableHoldPosition();
     m_percentSpeed = percentSpeed;
   }
 
@@ -93,7 +90,9 @@ public class Wrist2 extends SubsystemBase {
    * Stop trying to maintain wrist's angle at its current position.
    */
   public void disableHoldPosition(){
-    System.out.println("Wrist2 is no longer trying to hold its position");
+    if (m_isHoldingPosition) {
+      System.out.println("Wrist2 no longer is trying to hold its position");
+    }
     m_isHoldingPosition = false;
   }
 
@@ -111,13 +110,13 @@ public class Wrist2 extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    if (m_isHoldingPosition) {
+    if (m_isHoldingPosition && m_positionToHold != 0.0) {
       // bang bang control.  The speeds should depend on the angle from vertical, but we don't know that now
       double positionError = m_positionToHold - getPosition();
-      if (positionError > Units.degreesToRotations(1.5)) {
-        m_percentSpeed = 0.06;
-      } else if (positionError < -Units.degreesToRotations(1.5)){
-        m_percentSpeed = -0.03;
+      if (positionError > Units.degreesToRotations(0.0)) {
+        m_percentSpeed = 0.15 * Math.abs(Units.rotationsToDegrees(positionError));
+      } else if (positionError < -Units.degreesToRotations(0.0)){
+        m_percentSpeed = -0.01 * Math.abs(Units.rotationsToDegrees(positionError));
       } else {
         m_percentSpeed = 0.0;
       }
