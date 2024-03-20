@@ -53,19 +53,19 @@ public final class Constants {
         public static final double angleCurrentThresholdTime = 0.1;
         public static final boolean angleEnableCurrentLimit = true;
 
-        public static final int driveCurrentLimit = 35;
+        public static final int driveCurrentLimit = 40;
         public static final int driveCurrentThreshold = 60;
         public static final double driveCurrentThresholdTime = 0.1;
         public static final boolean driveEnableCurrentLimit = true;
 
         /* These values are used by the drive falcon to ramp in open loop and closed loop driving.
          * We found a small open loop ramp (0.25) helps with tread wear, tipping, etc */
-        public static final double openLoopRamp = 0.25;
-        public static final double closedLoopRamp = 0.25;
+        public static final double openLoopRamp = 0.2;
+        public static final double closedLoopRamp = 0.2;
         /*Let's allow ramp control on angle motors as well.
          * "Ramp" is number of seconds between stopped and full speed */
-        public static final double angleOpenLoopRamp = 0.25;
-        public static final double angleClosedLoopRamp = .25;
+        public static final double angleOpenLoopRamp = 0.2;
+        public static final double angleClosedLoopRamp = .2;
         // Increasing closedLoopRamp lowers peak current draw,
         // but causes more oscillation in angle.
 
@@ -87,9 +87,9 @@ public final class Constants {
 
         /* Swerve Profiling Values */
         /** Meters per Second */
-        public static final double maxSpeed = 2.0; //TODO: This must be tuned to specific robot
+        public static final double maxSpeed = 3.5; //TODO: This must be tuned to specific robot
         /** Radians per Second */
-        public static final double maxAngularVelocity = 2.0; //TODO: This must be tuned to specific robot
+        public static final double maxAngularVelocity = 2.5; //TODO: This must be tuned to specific robot
 
         /* Neutral Modes */
         public static final NeutralModeValue angleNeutralMode = NeutralModeValue.Coast;
