@@ -41,7 +41,7 @@ public class Wrist2GoToPosition extends Command {
   @Override
   public void end(boolean interrupted) {
     m_wrist2.setPercentSpeed(0.0);
-    // m_wrist2.holdPosition();
+    m_wrist2.holdPosition();
   }
 
   // Returns true when the command should end.

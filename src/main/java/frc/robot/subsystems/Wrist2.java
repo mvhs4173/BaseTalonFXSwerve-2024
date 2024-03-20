@@ -90,6 +90,14 @@ public class Wrist2 extends SubsystemBase {
   }
 
   /**
+   * Stop trying to maintain wrist's angle at its current position.
+   */
+  public void disableHoldPosition(){
+    System.out.println("Wrist2 is no longer trying to hold its position");
+    m_isHoldingPosition = false;
+  }
+
+  /**
    * Start trying to maintain wrist's angle.
    * Position holding will stop speed is set (to anything).
    * @param positionToHold angle to hold, in rotations of the wrist.
@@ -106,9 +114,9 @@ public class Wrist2 extends SubsystemBase {
     if (m_isHoldingPosition) {
       // bang bang control.  The speeds should depend on the angle from vertical, but we don't know that now
       double positionError = m_positionToHold - getPosition();
-      if (positionError > Units.degreesToRotations(2.0)) {
-        m_percentSpeed = 0.08;
-      } else if (positionError < -Units.degreesToRotations(2.0)){
+      if (positionError > Units.degreesToRotations(1.5)) {
+        m_percentSpeed = 0.06;
+      } else if (positionError < -Units.degreesToRotations(1.5)){
         m_percentSpeed = -0.03;
       } else {
         m_percentSpeed = 0.0;
