@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.autos.exampleAuto;
@@ -19,7 +18,6 @@ import frc.robot.commands.SetWrist2PercentSpeed;
 import frc.robot.commands.ShoulderGoToPosition;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.Wrist2GoToPosition;
-import frc.robot.commands.positionCommands.goToAmpShotPosition;
 import frc.robot.subsystems.BeamBreakSensor;
 import frc.robot.subsystems.ClimberServo;
 import frc.robot.subsystems.CollectorRoller;
@@ -29,6 +27,12 @@ import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Wrist2;
 
 /* Auto Commands */
+import frc.robot.commands.positionCommands.goToAmpShotPosition;
+import frc.robot.commands.positionCommands.goToSpeakerShotPosition;
+import frc.robot.commands.positionCommands.goToCollectionPositionFromAmp;
+import frc.robot.commands.positionCommands.goToCollectionPositionFromSpeaker;
+import frc.robot.commands.positionCommands.goToClimbPosition;
+
 import frc.robot.autos.redAmpOnlyAuto;
 import frc.robot.autos.blueAmpOnlyAuto;
 
@@ -104,13 +108,11 @@ public class RobotContainer {
 
         //Add commands to the autonomous command chooser
         m_chooser.setDefaultOption("Leave Starting Zone", new exampleAuto(s_Swerve, m_shoulder, m_wrist2, m_shooter2));
-        m_chooser.addOption("Red Amp Only", null);
-        m_chooser.addOption("Blue Amp Only", null);
-        m_chooser.addOption("Red Speaker Only", null);
-        m_chooser.addOption("Blue Speaker Only", null);
+        m_chooser.addOption("Red Amp And Park", null);
+        m_chooser.addOption("Blue Amp And Park", null);
+        m_chooser.addOption("Center Speaker", null);
+        m_chooser.addOption("Center Speaker And Park", null);
         m_chooser.addOption("Red Speaker + Note Right", null);
-        m_chooser.addOption("Red Speaker + Note Left", null);
-        m_chooser.addOption("Blue Speaker + Note Right", null);
         m_chooser.addOption("Blue Speaker + Note Left", null);
         m_chooser.addOption("Do Nothing", null);
         //m_chooser.addOption("Amp Shot Auto", m_Blue1AmpShotAuto);
@@ -168,27 +170,6 @@ public class RobotContainer {
         Trigger armLeftTrigger = new Trigger(() -> m_armController.getLeftTriggerAxis() > 0.5 );
         Trigger armRightTrigger = new Trigger(() -> m_armController.getRightTriggerAxis() > 0.5);
 
-        Command goToCollectionPositionFromSpeaker = new ParallelCommandGroup(
-            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 0.1, 0.0),
-            new Wrist2GoToPosition(m_wrist2, 0.3, 0)
-        ).withTimeout(3.0);
-        Command goToCollectionPositionFromAmp = new ParallelCommandGroup(
-            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 10.0, 0.0),
-            new Wrist2GoToPosition(m_wrist2, 0.2, 0)
-        ).withTimeout(4.0);
-        Command goToSpeakerShotPosition = new ParallelCommandGroup(
-            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 0.1, 0.0),
-            new Wrist2GoToPosition(m_wrist2, 0.35, 0.215)
-        ).withTimeout(7.0);
-        Command goToAmpShotPosition = new ParallelCommandGroup(
-            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 10.0, -0.175),
-            new Wrist2GoToPosition(m_wrist2, 0.35, 0.22)
-        ).withTimeout(7.0);
-        // Command gotoClimbPosition = that the arm should be straight up and the shooter should be parallel with the arm, folded inside it. 
-        Command goToClimbPosition =  new ParallelCommandGroup(
-            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 5.0, -0.22),
-            new Wrist2GoToPosition(m_wrist2, 0.03, 0.240)
-        ).withTimeout(7.0);
         Command shootForSpeaker = m_shooter2.shoot2ForSpeakerCommand();
         Command shootForAmp = m_shooter2.shoot2ForAmpCommand();
         Command doIntake = m_shooter2.intake2UntilBeamBreak(m_CollectorRoller, m_BeamBreakSensor);
@@ -197,18 +178,18 @@ public class RobotContainer {
         armB.whileTrue(new InstantCommand(() -> m_CollectorRoller.pushOut()));
         armB.onFalse(new InstantCommand(() -> m_CollectorRoller.stop()));
 
-        armLeftBumper.whileTrue(goToSpeakerShotPosition);
-        armLeftBumper.onFalse(goToCollectionPositionFromSpeaker);
+        armLeftBumper.whileTrue(new goToSpeakerShotPosition(m_shoulder, m_wrist2));
+        armLeftBumper.onFalse(new goToCollectionPositionFromSpeaker(m_shoulder, m_wrist2));
         armRightBumper.whileTrue(shootForSpeaker);
 
 
         armLeftTrigger.whileTrue(new goToAmpShotPosition(m_shoulder, m_wrist2));
-        armLeftTrigger.onFalse(goToCollectionPositionFromAmp);
+        armLeftTrigger.onFalse(new goToCollectionPositionFromAmp(m_shoulder, m_wrist2));
         armRightTrigger.whileTrue(shootForAmp);
 
         // Now for climbing control.  Climbing requires much more power in shoulder than shooting does.
         // Y button, while held down, causes arm to rise to vertical.
-        armY.whileTrue(goToClimbPosition);
+        armY.whileTrue(new goToClimbPosition(m_shoulder, m_wrist2));
         // bottom sectors of POV are for climbing.  SW is weakest (use for engaging the chain),
         // S can raise robot on hook two (from the top), SE can raise robot on topmost hook.
         // All will raise as long as button is pressed.
