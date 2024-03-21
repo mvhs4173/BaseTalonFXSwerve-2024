@@ -1,11 +1,7 @@
 package frc.robot.autos;
 
 import frc.robot.Constants;
-import frc.robot.commands.positionCommands.goToAmpShotPosition;
 import frc.robot.subsystems.Swerve;
-import frc.robot.subsystems.Shoulder;
-import frc.robot.subsystems.Wrist2;
-import frc.robot.subsystems.Shooter2;
 
 import java.util.List;
 
@@ -22,8 +18,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
-public class exampleAuto extends SequentialCommandGroup {
-    public exampleAuto(Swerve s_Swerve, Shoulder m_shoulder, Wrist2 m_wrist2, Shooter2 m_shooter2){
+public class redAmpOnlyAuto extends SequentialCommandGroup {
+    public redAmpOnlyAuto(Swerve s_Swerve){
         TrajectoryConfig config =
             new TrajectoryConfig(
                     Constants.AutoConstants.kMaxSpeedMetersPerSecond,
@@ -37,9 +33,9 @@ public class exampleAuto extends SequentialCommandGroup {
                 new Pose2d(Units.feetToMeters(0), Units.feetToMeters(0), new Rotation2d(Units.degreesToRadians(0))),
                 //Must change 'Y' value by at least 0.02 somewhere in the sequence
                 List.of(
-                     new Translation2d(Units.feetToMeters(3.0), Units.feetToMeters(0.05))
+                    new Translation2d(Units.feetToMeters(6.0), Units.feetToMeters(2.0))
                     ),
-                new Pose2d(Units.feetToMeters(6.0), Units.feetToMeters(0.0), new Rotation2d(Units.degreesToRadians(0))),
+                new Pose2d(Units.feetToMeters(1.5), Units.feetToMeters(0.0), new Rotation2d(Units.degreesToRadians(-90.0))),
                 config);
 
         var thetaController =
@@ -61,9 +57,7 @@ public class exampleAuto extends SequentialCommandGroup {
 
         addCommands(
             new InstantCommand(() -> s_Swerve.setPose(exampleTrajectory.getInitialPose())),
-            swerveControllerCommand,
-            new goToAmpShotPosition(m_shoulder, m_wrist2),
-            new InstantCommand(() -> m_shooter2.shoot2ForAmpCommand())
+            swerveControllerCommand
         );
     }
 }

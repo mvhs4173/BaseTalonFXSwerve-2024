@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import frc.robot.SwerveModule;
 import frc.robot.TuningVariables;
 import frc.robot.Constants;
-
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -16,6 +15,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -26,7 +26,12 @@ public class Swerve extends SubsystemBase {
     // public Pigeon2 gyro;
     private Gyro gyro = new Gyro(m_usePigeon);
 
+    Field2d m_field = new Field2d();
+
     public Swerve() {
+
+        SmartDashboard.putData("Field", m_field);
+
         // gyro = new Pigeon2(Constants.Swerve.pigeonID);
         // gyro.getConfigurator().apply(new Pigeon2Configuration());
         gyro.setYaw(0);
@@ -118,9 +123,16 @@ public class Swerve extends SubsystemBase {
         }
     }
 
+    public Field2d getField2d(){
+        return m_field;
+    }
+
     @Override
     public void periodic(){
         swerveOdometry.update(getGyroYaw(), getModulePositions());
+
+        m_field.setRobotPose(getPose());
+
         if (TuningVariables.debugLevel.getNumber() >= 5.0){
             for(SwerveModule mod : mSwerveMods){
                 SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());

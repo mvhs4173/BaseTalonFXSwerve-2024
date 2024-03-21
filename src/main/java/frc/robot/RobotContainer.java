@@ -13,9 +13,24 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.autos.*;
-import frc.robot.commands.*;
-import frc.robot.subsystems.*;
+import frc.robot.autos.exampleAuto;
+import frc.robot.commands.SetShoulderRPM;
+import frc.robot.commands.SetWrist2PercentSpeed;
+import frc.robot.commands.ShoulderGoToPosition;
+import frc.robot.commands.TeleopSwerve;
+import frc.robot.commands.Wrist2GoToPosition;
+import frc.robot.commands.positionCommands.goToAmpShotPosition;
+import frc.robot.subsystems.BeamBreakSensor;
+import frc.robot.subsystems.ClimberServo;
+import frc.robot.subsystems.CollectorRoller;
+import frc.robot.subsystems.Shooter2;
+import frc.robot.subsystems.Shoulder;
+import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.Wrist2;
+
+/* Auto Commands */
+import frc.robot.autos.redAmpOnlyAuto;
+import frc.robot.autos.blueAmpOnlyAuto;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -41,6 +56,7 @@ public class RobotContainer {
     private final JoystickButton zeroGyro = m_driveController != null ? new JoystickButton(m_driveController, XboxController.Button.kY.value) : null;
     private final JoystickButton robotCentric = m_driveController != null ? new JoystickButton(m_driveController, XboxController.Button.kLeftBumper.value) : null;
     /* Arm/note handler controller buttons are defined in configureButtonBindings below */
+
     /* Subsystems */
     private final Swerve s_Swerve = TuningVariables.useSwerve.getBoolean() ? new Swerve() : null; // set s_Swerve to null when testing arm & shooter alone
     private final Shoulder m_shoulder = TuningVariables.useShoulder.getBoolean() ? new Shoulder() : null;
@@ -49,24 +65,13 @@ public class RobotContainer {
     private final BeamBreakSensor m_BeamBreakSensor = new BeamBreakSensor();
     private final CollectorRoller m_CollectorRoller = TuningVariables.useCollectorRoller.getBoolean() ? new CollectorRoller() : null;
     private final ClimberServo m_climberServo = new ClimberServo(0);
+
     /* Autos */
     private final SendableChooser<Command> m_chooser = new SendableChooser<>();
-    //put auto routines here.  Give them understandable names.
-    //In RobotContainer(), make an m_chooser.addOption() entry for each auto.
-    //null means no auto.
 
-    private final Command autoGoToAmpShotPosition = new ParallelCommandGroup(
-            new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 10.0, -0.185),
-            new Wrist2GoToPosition(m_wrist2, 0.06, 0.23)
-        ).withTimeout(7.0);
-    
-    private final Command m_Auto_1 = new SequentialCommandGroup(
-      new ampAuto(s_Swerve),
-      autoGoToAmpShotPosition,
-      m_shooter2.shoot2ForAmpCommand().withTimeout(5.0)
-    );
     //private final Command m_Blue1AmpShotAuto = new PathPlannerAuto("Blue1AmpShotAuto");
-    //private final Command m_Blue2AmpShotAuto = new PathPlannerAuto("Blue2AmpShotAuto");     
+    //private final Command m_Blue2AmpShotAuto = new PathPlannerAuto("Blue2AmpShotAuto");
+        
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         TuningVariables.setAllToDefaultValues();
@@ -98,8 +103,16 @@ public class RobotContainer {
         //registerNamedPathPlannerCommands();
 
         //Add commands to the autonomous command chooser
-        m_chooser.setDefaultOption("Leave Starting Zone", new exampleAuto(s_Swerve));
-        m_chooser.addOption("Amp Auto", m_Auto_1);
+        m_chooser.setDefaultOption("Leave Starting Zone", new exampleAuto(s_Swerve, m_shoulder, m_wrist2, m_shooter2));
+        m_chooser.addOption("Red Amp Only", null);
+        m_chooser.addOption("Blue Amp Only", null);
+        m_chooser.addOption("Red Speaker Only", null);
+        m_chooser.addOption("Blue Speaker Only", null);
+        m_chooser.addOption("Red Speaker + Note Right", null);
+        m_chooser.addOption("Red Speaker + Note Left", null);
+        m_chooser.addOption("Blue Speaker + Note Right", null);
+        m_chooser.addOption("Blue Speaker + Note Left", null);
+        m_chooser.addOption("Do Nothing", null);
         //m_chooser.addOption("Amp Shot Auto", m_Blue1AmpShotAuto);
         //m_chooser.addOption("Amp Shot 2 Auto", m_Blue2AmpShotAuto);
         //Put the chooser on the dashboard
@@ -176,7 +189,7 @@ public class RobotContainer {
             new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 5.0, -0.22),
             new Wrist2GoToPosition(m_wrist2, 0.03, 0.240)
         ).withTimeout(7.0);
-        Command shootForSpeaker = m_shooter2.shoot2ForSpeakerCommand(); // full blast (c. 6000)
+        Command shootForSpeaker = m_shooter2.shoot2ForSpeakerCommand();
         Command shootForAmp = m_shooter2.shoot2ForAmpCommand();
         Command doIntake = m_shooter2.intake2UntilBeamBreak(m_CollectorRoller, m_BeamBreakSensor);
         
@@ -189,7 +202,7 @@ public class RobotContainer {
         armRightBumper.whileTrue(shootForSpeaker);
 
 
-        armLeftTrigger.whileTrue(goToAmpShotPosition);
+        armLeftTrigger.whileTrue(new goToAmpShotPosition(m_shoulder, m_wrist2));
         armLeftTrigger.onFalse(goToCollectionPositionFromAmp);
         armRightTrigger.whileTrue(shootForAmp);
 

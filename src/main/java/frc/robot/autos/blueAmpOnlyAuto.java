@@ -18,8 +18,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
-public class ampAuto extends SequentialCommandGroup {
-    public ampAuto(Swerve s_Swerve){
+public class blueAmpOnlyAuto extends SequentialCommandGroup {
+    public blueAmpOnlyAuto(Swerve s_Swerve){
         TrajectoryConfig config =
             new TrajectoryConfig(
                     Constants.AutoConstants.kMaxSpeedMetersPerSecond,
@@ -34,11 +34,11 @@ public class ampAuto extends SequentialCommandGroup {
                 // Pass through these two interior waypoints, making an 's' curve path
                 //Must change 'Y' value by at least 0.02 somewhere in the sequence
                 List.of(
-                    new Translation2d(Units.feetToMeters(6.0), Units.feetToMeters(2.0))
+                    new Translation2d(Units.feetToMeters(6.0), Units.feetToMeters(-2.0))
                     ),
 
                 // End 3 meters straight ahead of where we started, facing forward
-                new Pose2d(Units.feetToMeters(1.5), Units.feetToMeters(0.0), new Rotation2d(Units.degreesToRadians(-90.0))),
+                new Pose2d(Units.feetToMeters(1.5), Units.feetToMeters(0.0), new Rotation2d(Units.degreesToRadians(90.0))),
                 config);
 
         var thetaController =
