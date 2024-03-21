@@ -129,10 +129,10 @@ public class Swerve extends SubsystemBase {
 
     public void lockX(){
         SwerveModuleState[] m_states = {
-            new SwerveModuleState(0.0, Rotation2d.fromDegrees(45)),
             new SwerveModuleState(0.0, Rotation2d.fromDegrees(135)),
             new SwerveModuleState(0.0, Rotation2d.fromDegrees(45)),
-            new SwerveModuleState(0.0, Rotation2d.fromDegrees(135))
+            new SwerveModuleState(0.0, Rotation2d.fromDegrees(135)),
+            new SwerveModuleState(0.0, Rotation2d.fromDegrees(45))
         };
         setModuleStates(m_states);
     }

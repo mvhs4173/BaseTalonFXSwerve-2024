@@ -22,6 +22,7 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -58,12 +59,12 @@ public class redAmpPlusIntakeAuto extends SequentialCommandGroup {
         Trajectory firstPathTrajectory =
             TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
-                new Pose2d(Units.feetToMeters(0), Units.feetToMeters(0), new Rotation2d(Units.degreesToRadians(90))),
+                new Pose2d(Units.feetToMeters(0), Units.feetToMeters(0), new Rotation2d(Units.degreesToRadians(270))),
                 //Must change 'Y' value by at least 0.02 somewhere in the sequence
                 List.of(
-                     new Translation2d(Units.feetToMeters(1.0), Units.feetToMeters(0.05))
+                     new Translation2d(Units.feetToMeters(1.0), Units.feetToMeters(0.25))
                     ),
-                new Pose2d(Units.feetToMeters(2.0), Units.feetToMeters(0.0), new Rotation2d(Units.degreesToRadians(90))),
+                new Pose2d(Units.feetToMeters(2.0), Units.feetToMeters(0.0), new Rotation2d(Units.degreesToRadians(270))),
                 config);
 
         SwerveControllerCommand firstPathCommand =
@@ -84,9 +85,9 @@ public class redAmpPlusIntakeAuto extends SequentialCommandGroup {
                 s_Swerve.getPose(),
                 //Must change 'Y' value by at least 0.02 somewhere in the sequence
                 List.of(
-                     new Translation2d(Units.feetToMeters(0), Units.feetToMeters(1.0))
+                     new Translation2d(Units.feetToMeters(2.0), Units.feetToMeters(0.5))
                     ),
-                new Pose2d(Units.feetToMeters(4.0), Units.feetToMeters(0.5), new Rotation2d(Units.degreesToRadians(0))),
+                new Pose2d(Units.feetToMeters(5.0), Units.feetToMeters(0.5), new Rotation2d(Units.degreesToRadians(0))),
                 config);
 
         SwerveControllerCommand secondPathCommand =
@@ -112,7 +113,16 @@ public class redAmpPlusIntakeAuto extends SequentialCommandGroup {
             new WaitCommand(0.25),
             new goToCollectionPositionFromAmp(shoulder, wrist2),
             new WaitCommand(0.25),
-            new SequentialCommandGroup(secondPathCommand, m_shooter2.intake2UntilBeamBreak(m_collectorRoller, m_beamBreakSensor))
+            new ParallelCommandGroup(
+                new SequentialCommandGroup(
+                    secondPathCommand,
+                    new InstantCommand(() -> s_Swerve.lockX())
+                ),
+                new SequentialCommandGroup(
+                    new WaitCommand(2.0),
+                    m_shooter2.intake2UntilBeamBreak(m_collectorRoller, m_beamBreakSensor)
+                )
+            )
         );
     }
 }

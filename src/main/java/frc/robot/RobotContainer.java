@@ -108,8 +108,8 @@ public class RobotContainer {
 
         //Add commands to the autonomous command chooser
         m_chooser.setDefaultOption("Leave Starting Zone", new parkAuto(s_Swerve));
-        m_chooser.addOption("Red Amp And Park", new redAmpPlusIntakeAuto(s_Swerve, m_shoulder, m_wrist2, m_shooter2, m_CollectorRoller, m_BeamBreakSensor));
-        m_chooser.addOption("Blue Amp And Park", new blueAmpPlusIntakeAuto(s_Swerve, m_shoulder, m_wrist2, m_shooter2, m_CollectorRoller, m_BeamBreakSensor));
+        m_chooser.addOption("Red Amp And Intake", new redAmpPlusIntakeAuto(s_Swerve, m_shoulder, m_wrist2, m_shooter2, m_CollectorRoller, m_BeamBreakSensor));
+        m_chooser.addOption("Blue Amp And Intake", new blueAmpPlusIntakeAuto(s_Swerve, m_shoulder, m_wrist2, m_shooter2, m_CollectorRoller, m_BeamBreakSensor));
         m_chooser.addOption("Center Speaker", null);
         m_chooser.addOption("Center Speaker And Park", null);
         m_chooser.addOption("Red Speaker + Note Right", null);
