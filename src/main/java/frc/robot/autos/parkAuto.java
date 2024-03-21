@@ -1,12 +1,7 @@
 package frc.robot.autos;
 
 import frc.robot.Constants;
-import frc.robot.commands.positionCommands.goToAmpShotPosition;
-import frc.robot.commands.positionCommands.goToCollectionPositionFromAmp;
 import frc.robot.subsystems.Swerve;
-import frc.robot.subsystems.Shoulder;
-import frc.robot.subsystems.Wrist2;
-import frc.robot.subsystems.Shooter2;
 
 import java.util.List;
 
@@ -22,19 +17,12 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 
-public class exampleAuto extends SequentialCommandGroup {
+public class parkAuto extends SequentialCommandGroup {
     Swerve s_Swerve;
-    Shoulder m_shoulder;
-    Wrist2 m_wrist2;
-    Shooter2 m_shooter2;
-    public exampleAuto(Swerve swerve, Shoulder shoulder, Wrist2 wrist2, Shooter2 shooter2){
+    public parkAuto(Swerve swerve){
         s_Swerve = swerve;
-        m_shoulder = shoulder;
-        m_wrist2 = wrist2;
-        m_shooter2 = shooter2;
-        addRequirements(s_Swerve, m_shoulder, m_wrist2, m_shooter2);
+        addRequirements(s_Swerve);
 
         TrajectoryConfig config =
             new TrajectoryConfig(
@@ -70,43 +58,12 @@ public class exampleAuto extends SequentialCommandGroup {
                 thetaController,
                 s_Swerve::setModuleStates,
                 s_Swerve);
-        
-        
-         Trajectory secondPathTrajectory =
-            TrajectoryGenerator.generateTrajectory(
-                // Start at the origin facing the +X direction
-                s_Swerve.getPose(),
-                //Must change 'Y' value by at least 0.02 somewhere in the sequence
-                List.of(
-                     new Translation2d(Units.feetToMeters(1.5), Units.feetToMeters(0.05))
-                    ),
-                new Pose2d(Units.feetToMeters(0.0), Units.feetToMeters(0.0), new Rotation2d(Units.degreesToRadians(0))),
-                config);
-
-        SwerveControllerCommand secondPathCommand =
-            new SwerveControllerCommand(
-                secondPathTrajectory,
-                s_Swerve::getPose,
-                Constants.Swerve.swerveKinematics,
-                new PIDController(Constants.AutoConstants.kPXController, 0, 0),
-                new PIDController(Constants.AutoConstants.kPYController, 0, 0),
-                thetaController,
-                s_Swerve::setModuleStates,
-                s_Swerve);
 
 
         addCommands(
             new InstantCommand(() -> s_Swerve.setPose(firstPathTrajectory.getInitialPose())),
             firstPathCommand,
-            new InstantCommand(() -> s_Swerve.lockX()),
-            new WaitCommand(0.25),
-            new goToAmpShotPosition(m_shoulder, m_wrist2),
-            new WaitCommand(0.25),
-            m_shooter2.shoot2ForAmpCommand(),
-            new WaitCommand(0.25),
-            new goToCollectionPositionFromAmp(shoulder, wrist2),
-            new WaitCommand(0.25),
-            secondPathCommand
+            new InstantCommand(() -> s_Swerve.lockX())
         );
     }
 }

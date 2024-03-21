@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.autos.exampleAuto;
+import frc.robot.autos.parkAuto;
 import frc.robot.commands.SetShoulderRPM;
 import frc.robot.commands.SetWrist2PercentSpeed;
 import frc.robot.commands.ShoulderGoToPosition;
@@ -33,8 +33,8 @@ import frc.robot.commands.positionCommands.goToCollectionPositionFromAmp;
 import frc.robot.commands.positionCommands.goToCollectionPositionFromSpeaker;
 import frc.robot.commands.positionCommands.goToClimbPosition;
 
-import frc.robot.autos.redAmpOnlyAuto;
-import frc.robot.autos.blueAmpOnlyAuto;
+import frc.robot.autos.redAmpPlusIntakeAuto;
+import frc.robot.autos.blueAmpPlusIntakeAuto;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -107,9 +107,9 @@ public class RobotContainer {
         //registerNamedPathPlannerCommands();
 
         //Add commands to the autonomous command chooser
-        m_chooser.setDefaultOption("Leave Starting Zone", new exampleAuto(s_Swerve, m_shoulder, m_wrist2, m_shooter2));
-        m_chooser.addOption("Red Amp And Park", null);
-        m_chooser.addOption("Blue Amp And Park", null);
+        m_chooser.setDefaultOption("Leave Starting Zone", new parkAuto(s_Swerve));
+        m_chooser.addOption("Red Amp And Park", new redAmpPlusIntakeAuto(s_Swerve, m_shoulder, m_wrist2, m_shooter2, m_CollectorRoller, m_BeamBreakSensor));
+        m_chooser.addOption("Blue Amp And Park", new blueAmpPlusIntakeAuto(s_Swerve, m_shoulder, m_wrist2, m_shooter2, m_CollectorRoller, m_BeamBreakSensor));
         m_chooser.addOption("Center Speaker", null);
         m_chooser.addOption("Center Speaker And Park", null);
         m_chooser.addOption("Red Speaker + Note Right", null);
