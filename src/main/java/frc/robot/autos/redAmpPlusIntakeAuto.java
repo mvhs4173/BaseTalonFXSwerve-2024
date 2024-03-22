@@ -85,9 +85,9 @@ public class redAmpPlusIntakeAuto extends SequentialCommandGroup {
                 s_Swerve.getPose(),
                 //Must change 'Y' value by at least 0.02 somewhere in the sequence
                 List.of(
-                     new Translation2d(Units.feetToMeters(2.0), Units.feetToMeters(0.5))
+                     new Translation2d(Units.feetToMeters(2.0), Units.feetToMeters(2.5))
                     ),
-                new Pose2d(Units.feetToMeters(5.0), Units.feetToMeters(0.5), new Rotation2d(Units.degreesToRadians(0))),
+                new Pose2d(Units.feetToMeters(5.0), Units.feetToMeters(2.5), new Rotation2d(Units.degreesToRadians(0))),
                 config);
 
         SwerveControllerCommand secondPathCommand =

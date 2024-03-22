@@ -3,6 +3,8 @@ package frc.robot.autos;
 import frc.robot.Constants;
 import frc.robot.commands.positionCommands.goToAmpShotPosition;
 import frc.robot.commands.positionCommands.goToCollectionPositionFromAmp;
+import frc.robot.commands.positionCommands.goToCollectionPositionFromSpeaker;
+import frc.robot.commands.positionCommands.goToSpeakerShotPosition;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Wrist2;
@@ -27,14 +29,14 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
-public class blueAmpPlusIntakeAuto extends SequentialCommandGroup {
+public class centerSpeakerScore2 extends SequentialCommandGroup {
     Swerve s_Swerve;
     Shoulder m_shoulder;
     Wrist2 m_wrist2;
     Shooter2 m_shooter2;
     CollectorRoller m_collectorRoller;
     BeamBreakSensor m_beamBreakSensor;
-    public blueAmpPlusIntakeAuto(Swerve swerve, Shoulder shoulder, Wrist2 wrist2, Shooter2 shooter2, CollectorRoller collectorRoller, BeamBreakSensor beamBreakSensor){
+    public centerSpeakerScore2(Swerve swerve, Shoulder shoulder, Wrist2 wrist2, Shooter2 shooter2, CollectorRoller collectorRoller, BeamBreakSensor beamBreakSensor){
         s_Swerve = swerve;
         m_shoulder = shoulder;
         m_wrist2 = wrist2;
@@ -59,12 +61,14 @@ public class blueAmpPlusIntakeAuto extends SequentialCommandGroup {
         Trajectory firstPathTrajectory =
             TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
-                new Pose2d(Units.feetToMeters(0), Units.feetToMeters(3.0), new Rotation2d(Units.degreesToRadians(90))),
+                new Pose2d(Units.feetToMeters(0), Units.feetToMeters(3.0), new Rotation2d(Units.degreesToRadians(180))),
                 //Must change 'Y' value by at least 0.02 somewhere in the sequence
                 List.of(
-                     new Translation2d(Units.feetToMeters(1.0), Units.feetToMeters(2.75))
+                     new Translation2d(Units.feetToMeters(3.5), Units.feetToMeters(0.5)),
+                     new Translation2d(Units.feetToMeters(5.0), Units.feetToMeters(0.5)),
+                     new Translation2d(Units.feetToMeters(7.0), Units.feetToMeters(3.0))
                     ),
-                new Pose2d(Units.feetToMeters(2.0), Units.feetToMeters(3.0), new Rotation2d(Units.degreesToRadians(90))),
+                new Pose2d(Units.feetToMeters(0.25), Units.feetToMeters(3.0), new Rotation2d(Units.degreesToRadians(180))),
                 config);
 
         SwerveControllerCommand firstPathCommand =
@@ -78,50 +82,27 @@ public class blueAmpPlusIntakeAuto extends SequentialCommandGroup {
                 s_Swerve::setModuleStates,
                 s_Swerve);
         
-         Trajectory secondPathTrajectory =
-            TrajectoryGenerator.generateTrajectory(
-                // Start at the origin facing the +X direction
-                s_Swerve.getPose(),
-                //Must change 'Y' value by at least 0.02 somewhere in the sequence
-                List.of(
-                     new Translation2d(Units.feetToMeters(2.0), Units.feetToMeters(0.5))
-                    ),
-                new Pose2d(Units.feetToMeters(5.0), Units.feetToMeters(0.5), new Rotation2d(Units.degreesToRadians(0))),
-                config);
-
-        SwerveControllerCommand secondPathCommand =
-            new SwerveControllerCommand(
-                secondPathTrajectory,
-                s_Swerve::getPose,
-                Constants.Swerve.swerveKinematics,
-                new PIDController(Constants.AutoConstants.kPXController, 0, 0),
-                new PIDController(Constants.AutoConstants.kPYController, 0, 0),
-                thetaController,
-                s_Swerve::setModuleStates,
-                s_Swerve);
-
 
         addCommands(
             new InstantCommand(() -> s_Swerve.setPose(firstPathTrajectory.getInitialPose())),
-            firstPathCommand,
-            new InstantCommand(() -> s_Swerve.lockX()),
-            new WaitCommand(0.25),
-            new goToAmpShotPosition(m_shoulder, m_wrist2),
-            new WaitCommand(0.25),
-            m_shooter2.shoot2ForAmpCommand(),
-            new WaitCommand(0.25),
-            new goToCollectionPositionFromAmp(shoulder, wrist2),
+            new goToSpeakerShotPosition(shoulder, wrist2),
+            m_shooter2.shoot2ForSpeakerCommand(),
+            new goToCollectionPositionFromSpeaker(shoulder, wrist2),
             new WaitCommand(0.25),
             new ParallelCommandGroup(
                 new SequentialCommandGroup(
-                    secondPathCommand,
+                    firstPathCommand,
                     new InstantCommand(() -> s_Swerve.lockX())
                 ),
                 new SequentialCommandGroup(
-                    new WaitCommand(2.0),
+                    new WaitCommand(5.0),
                     m_shooter2.intake2UntilBeamBreak(m_collectorRoller, m_beamBreakSensor)
                 )
-            )
+            ),
+            new WaitCommand(0.25),
+            new goToSpeakerShotPosition(m_shoulder, m_wrist2),
+            m_shooter2.shoot2ForSpeakerCommand(),
+            new goToCollectionPositionFromSpeaker(shoulder, wrist2)
         );
     }
 }
