@@ -27,6 +27,7 @@ public class centerSpeaker extends SequentialCommandGroup {
         addRequirements(s_Swerve, m_shoulder, m_wrist2, m_shooter2);
 
         addCommands(
+            new InstantCommand(() -> m_wrist2.setToBrakeOnIdle(true)),
             new InstantCommand(() -> s_Swerve.setPose(new Pose2d(Units.feetToMeters(0), Units.feetToMeters(0), new Rotation2d(Units.degreesToRadians(180))))),
             new InstantCommand(() -> s_Swerve.lockX()),
             new WaitCommand(0.25),

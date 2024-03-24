@@ -21,11 +21,15 @@ public class Wrist2 extends SubsystemBase {
     m_motor = new SparkMaxMotor(Constants.Wrist2Constants.kCANId,
                                 Constants.Wrist2Constants.encoderRotationsPerFinalRotation,
                                 Constants.Wrist2Constants.name);
-    m_motor.setToBrakeOnIdle(true);
+    m_motor.setToBrakeOnIdle(false);
     m_motor.setAndEnableLowerSoftLimit(Constants.Wrist2Constants.lowerSoftLimit); // 0.0
     m_motor.setAndEnableUpperSoftLimit(Constants.Wrist2Constants.upperSoftLimit); // 0.28 or so
     m_percentSpeed = 0.0;
     m_isHoldingPosition = false;
+  }
+
+  public void setToBrakeOnIdle (boolean breakOnIdle){
+    m_motor.setToBrakeOnIdle(breakOnIdle);
   }
 
   /**

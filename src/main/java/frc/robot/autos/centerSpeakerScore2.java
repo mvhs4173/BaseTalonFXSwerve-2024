@@ -64,11 +64,11 @@ public class centerSpeakerScore2 extends SequentialCommandGroup {
                 new Pose2d(Units.feetToMeters(0), Units.feetToMeters(3.0), new Rotation2d(Units.degreesToRadians(180))),
                 //Must change 'Y' value by at least 0.02 somewhere in the sequence
                 List.of(
-                     new Translation2d(Units.feetToMeters(3.5), Units.feetToMeters(0.5)),
-                     new Translation2d(Units.feetToMeters(5.0), Units.feetToMeters(0.5)),
-                     new Translation2d(Units.feetToMeters(7.0), Units.feetToMeters(3.0))
+                     new Translation2d(Units.feetToMeters(5.0), Units.feetToMeters(0.25)),
+                     new Translation2d(Units.feetToMeters(8.5), Units.feetToMeters(0.25)),
+                     new Translation2d(Units.feetToMeters(9.5), Units.feetToMeters(3.0))
                     ),
-                new Pose2d(Units.feetToMeters(0.25), Units.feetToMeters(3.0), new Rotation2d(Units.degreesToRadians(180))),
+                new Pose2d(Units.feetToMeters(0.0), Units.feetToMeters(3.0), new Rotation2d(Units.degreesToRadians(180))),
                 config);
 
         SwerveControllerCommand firstPathCommand =
@@ -95,7 +95,7 @@ public class centerSpeakerScore2 extends SequentialCommandGroup {
                     new InstantCommand(() -> s_Swerve.lockX())
                 ),
                 new SequentialCommandGroup(
-                    new WaitCommand(5.0),
+                    new WaitCommand(6.5),
                     m_shooter2.intake2UntilBeamBreak(m_collectorRoller, m_beamBreakSensor)
                 )
             ),
