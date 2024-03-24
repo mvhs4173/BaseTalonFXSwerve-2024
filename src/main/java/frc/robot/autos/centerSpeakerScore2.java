@@ -61,7 +61,7 @@ public class centerSpeakerScore2 extends SequentialCommandGroup {
         Trajectory firstPathTrajectory =
             TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
-                new Pose2d(Units.feetToMeters(0), Units.feetToMeters(3.0), new Rotation2d(Units.degreesToRadians(180))),
+                new Pose2d(Units.feetToMeters(0.5), Units.feetToMeters(3.0), new Rotation2d(Units.degreesToRadians(180))),
                 //Must change 'Y' value by at least 0.02 somewhere in the sequence
                 List.of(
                      new Translation2d(Units.feetToMeters(5.0), Units.feetToMeters(0.25)),
@@ -85,23 +85,31 @@ public class centerSpeakerScore2 extends SequentialCommandGroup {
 
         addCommands(
             new InstantCommand(() -> s_Swerve.setPose(firstPathTrajectory.getInitialPose())),
-            new goToSpeakerShotPosition(shoulder, wrist2),
-            m_shooter2.shoot2ForSpeakerCommand(),
-            new goToCollectionPositionFromSpeaker(shoulder, wrist2),
-            new WaitCommand(0.25),
             new ParallelCommandGroup(
+                new goToSpeakerShotPosition(shoulder, wrist2),
+                new SequentialCommandGroup(
+                    new WaitCommand(0.875),
+                    m_shooter2.shoot2ForSpeakerCommand()
+                )
+            ),
+            new ParallelCommandGroup(
+                new goToCollectionPositionFromSpeaker(shoulder, wrist2),
                 new SequentialCommandGroup(
                     firstPathCommand,
                     new InstantCommand(() -> s_Swerve.lockX())
                 ),
                 new SequentialCommandGroup(
-                    new WaitCommand(6.5),
+                    new WaitCommand(4.5),
                     m_shooter2.intake2UntilBeamBreak(m_collectorRoller, m_beamBreakSensor)
                 )
             ),
-            new WaitCommand(0.25),
-            new goToSpeakerShotPosition(m_shoulder, m_wrist2),
-            m_shooter2.shoot2ForSpeakerCommand(),
+            new ParallelCommandGroup(
+                new goToSpeakerShotPosition(shoulder, wrist2),
+                new SequentialCommandGroup(
+                    new WaitCommand(0.875),
+                    m_shooter2.shoot2ForSpeakerCommand()
+                )
+            ),
             new goToCollectionPositionFromSpeaker(shoulder, wrist2)
         );
     }
