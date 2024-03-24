@@ -88,7 +88,7 @@ public class centerSpeakerScore2 extends SequentialCommandGroup {
             new ParallelCommandGroup(
                 new goToSpeakerShotPosition(shoulder, wrist2),
                 new SequentialCommandGroup(
-                    new WaitCommand(0.875),
+                    new WaitCommand(0.65),
                     m_shooter2.shoot2ForSpeakerCommand()
                 )
             ),
@@ -99,14 +99,14 @@ public class centerSpeakerScore2 extends SequentialCommandGroup {
                     new InstantCommand(() -> s_Swerve.lockX())
                 ),
                 new SequentialCommandGroup(
-                    new WaitCommand(4.5),
+                    new WaitCommand(3.5),
                     m_shooter2.intake2UntilBeamBreak(m_collectorRoller, m_beamBreakSensor)
                 )
             ),
             new ParallelCommandGroup(
                 new goToSpeakerShotPosition(shoulder, wrist2),
                 new SequentialCommandGroup(
-                    new WaitCommand(0.875),
+                    new WaitCommand(0.65),
                     m_shooter2.shoot2ForSpeakerCommand()
                 )
             ),
