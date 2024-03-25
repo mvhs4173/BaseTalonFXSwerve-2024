@@ -34,9 +34,12 @@ import frc.robot.commands.positionCommands.goToCollectionPositionFromSpeaker;
 import frc.robot.commands.positionCommands.goToClimbPosition;
 
 import frc.robot.autos.redAmpPlusIntakeAuto;
+import frc.robot.autos.rightSpeaker;
 import frc.robot.autos.blueAmpPlusIntakeAuto;
 import frc.robot.autos.centerSpeaker;
 import frc.robot.autos.centerSpeakerScore2;
+import frc.robot.autos.compAuto;
+import frc.robot.autos.leftSpeaker;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -113,10 +116,12 @@ public class RobotContainer {
         m_chooser.addOption("Red Amp And Intake", new redAmpPlusIntakeAuto(s_Swerve, m_shoulder, m_wrist2, m_shooter2, m_CollectorRoller, m_BeamBreakSensor));
         m_chooser.addOption("Blue Amp And Intake", new blueAmpPlusIntakeAuto(s_Swerve, m_shoulder, m_wrist2, m_shooter2, m_CollectorRoller, m_BeamBreakSensor));
         m_chooser.addOption("Center Speaker", new centerSpeaker(s_Swerve, m_shoulder, m_wrist2, m_shooter2));
+        m_chooser.addOption("Right Speaker", new rightSpeaker(s_Swerve, m_shoulder, m_wrist2, m_shooter2));
+        m_chooser.addOption("Left Speaker", new leftSpeaker(s_Swerve, m_shoulder, m_wrist2, m_shooter2));
         m_chooser.addOption("Center Speaker Plus Center Note", new centerSpeakerScore2(s_Swerve, m_shoulder, m_wrist2, m_shooter2, m_CollectorRoller, m_BeamBreakSensor));
         m_chooser.addOption("Red Speaker + Note Right", null);
         m_chooser.addOption("Blue Speaker + Note Left", null);
-        m_chooser.addOption("Do Nothing", null);
+        m_chooser.addOption("Do Nothing", new compAuto(s_Swerve, m_shoulder, m_wrist2, m_shooter2, m_CollectorRoller, m_BeamBreakSensor));
         //m_chooser.addOption("Amp Shot Auto", m_Blue1AmpShotAuto);
         //m_chooser.addOption("Amp Shot 2 Auto", m_Blue2AmpShotAuto);
         //Put the chooser on the dashboard

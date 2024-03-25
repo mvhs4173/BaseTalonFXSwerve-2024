@@ -1,6 +1,8 @@
 package frc.robot.autos;
 
 import frc.robot.Constants;
+import frc.robot.commands.positionCommands.goToAmpShotPosition;
+import frc.robot.commands.positionCommands.goToCollectionPositionFromAmp;
 import frc.robot.commands.positionCommands.goToCollectionPositionFromSpeaker;
 import frc.robot.commands.positionCommands.goToSpeakerShotPosition;
 import frc.robot.subsystems.Swerve;
@@ -27,14 +29,14 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
-public class centerSpeakerScore2 extends SequentialCommandGroup {
+public class compAuto extends SequentialCommandGroup {
     Swerve s_Swerve;
     Shoulder m_shoulder;
     Wrist2 m_wrist2;
     Shooter2 m_shooter2;
     CollectorRoller m_collectorRoller;
     BeamBreakSensor m_beamBreakSensor;
-    public centerSpeakerScore2(Swerve swerve, Shoulder shoulder, Wrist2 wrist2, Shooter2 shooter2, CollectorRoller collectorRoller, BeamBreakSensor beamBreakSensor){
+    public compAuto(Swerve swerve, Shoulder shoulder, Wrist2 wrist2, Shooter2 shooter2, CollectorRoller collectorRoller, BeamBreakSensor beamBreakSensor){
         s_Swerve = swerve;
         m_shoulder = shoulder;
         m_wrist2 = wrist2;
@@ -59,14 +61,12 @@ public class centerSpeakerScore2 extends SequentialCommandGroup {
         Trajectory firstPathTrajectory =
             TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
-                new Pose2d(Units.feetToMeters(0.5), Units.feetToMeters(3.0), new Rotation2d(Units.degreesToRadians(180))),
+                new Pose2d(Units.feetToMeters(0), Units.feetToMeters(0.0), new Rotation2d(Units.degreesToRadians(180 + 60))),
                 //Must change 'Y' value by at least 0.02 somewhere in the sequence
                 List.of(
-                     new Translation2d(Units.feetToMeters(5.0), Units.feetToMeters(0.25)),
-                     new Translation2d(Units.feetToMeters(8.5), Units.feetToMeters(0.25)),
-                     new Translation2d(Units.feetToMeters(9.5), Units.feetToMeters(3.0))
+                     new Translation2d(Units.feetToMeters(2.0), Units.feetToMeters(2.0))
                     ),
-                new Pose2d(Units.feetToMeters(0.0), Units.feetToMeters(3.0), new Rotation2d(Units.degreesToRadians(180))),
+                new Pose2d(Units.feetToMeters(10.0), Units.feetToMeters(4.0), new Rotation2d(Units.degreesToRadians(0.0))),
                 config);
 
         SwerveControllerCommand firstPathCommand =
@@ -79,36 +79,16 @@ public class centerSpeakerScore2 extends SequentialCommandGroup {
                 thetaController,
                 s_Swerve::setModuleStates,
                 s_Swerve);
-        
 
+            
         addCommands(
             new InstantCommand(() -> s_Swerve.setPose(firstPathTrajectory.getInitialPose())),
-            new ParallelCommandGroup(
-                new goToSpeakerShotPosition(shoulder, wrist2),
-                new SequentialCommandGroup(
-                    new WaitCommand(0.7),
-                    m_shooter2.shoot2ForSpeakerCommand()
-                )
-            ),
-            new ParallelCommandGroup(
-                new goToCollectionPositionFromSpeaker(shoulder, wrist2),
-                new SequentialCommandGroup(
-                    firstPathCommand,
-                    new InstantCommand(() -> s_Swerve.lockX())
-                ),
-                new SequentialCommandGroup(
-                    new WaitCommand(4.0),
-                    m_shooter2.intake2UntilBeamBreak(m_collectorRoller, m_beamBreakSensor)
-                )
-            ),
-            new ParallelCommandGroup(
-                new goToSpeakerShotPosition(shoulder, wrist2),
-                new SequentialCommandGroup(
-                    new WaitCommand(0.7),
-                    m_shooter2.shoot2ForSpeakerCommand()
-                )
-            ),
-            new goToCollectionPositionFromSpeaker(shoulder, wrist2)
+            new goToSpeakerShotPosition(shoulder, wrist2),
+            m_shooter2.shoot2ForSpeakerCommand(),
+            new goToCollectionPositionFromSpeaker(shoulder, wrist2),
+            new WaitCommand(7.0),
+            firstPathCommand,
+            new InstantCommand(() -> s_Swerve.lockX())
         );
     }
 }
