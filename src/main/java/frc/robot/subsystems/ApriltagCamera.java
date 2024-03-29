@@ -29,7 +29,7 @@ import frc.robot.PositionListener;
  * Code to interface with the camera/pipeline used to detect
  * apriltags.
  * 
- * Copied from Team-Eagle-Eyed-2023-24.
+ * Copied from https://github.com/Team-Eagle-Eyed/2023-24/tree/main 2024-03-29.
  */
 public class ApriltagCamera extends SubsystemBase {
 
