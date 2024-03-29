@@ -5,8 +5,9 @@ import frc.robot.TuningVariables;
 import frc.robot.Constants;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+//import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 
 //import com.ctre.phoenix6.configs.Pigeon2Configuration;
 //import com.ctre.phoenix6.hardware.Pigeon2;
@@ -15,12 +16,13 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Swerve extends SubsystemBase {
-    public SwerveDriveOdometry swerveOdometry;
+    private SwerveDrivePoseEstimator m_poseEstimator;
     public SwerveModule[] mSwerveMods;
     private boolean m_usePigeon = false;
     // public Pigeon2 gyro;
@@ -43,7 +45,8 @@ public class Swerve extends SubsystemBase {
             new SwerveModule(3, Constants.Swerve.Mod3.constants)
         };
 
-        swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getGyroYaw(), getModulePositions());
+        m_poseEstimator = new SwerveDrivePoseEstimator(Constants.Swerve.swerveKinematics, getGyroYaw(), getModulePositions(),
+            new Pose2d(new Translation2d(0.0, 0.0), new Rotation2d(Units.degreesToRadians(0.0))));
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
@@ -92,12 +95,23 @@ public class Swerve extends SubsystemBase {
         return positions;
     }
 
+    /**
+     * This allows unlimited direct access to the pose estimator.
+     * We would like you to minimize use of this, e.g. by using
+     * m_swerve.getPose() instead of m_swerve.getPoseEstimator().getEstimatedPosition().
+     * Add more methods to Swerve if needed.
+     * @return the pose estimator for the swerve drive
+     */
+    public SwerveDrivePoseEstimator getPoseEstimator(){
+        return m_poseEstimator;
+    }
+
     public Pose2d getPose() {
-        return swerveOdometry.getPoseMeters();
+        return m_poseEstimator.getEstimatedPosition();
     }
 
     public void setPose(Pose2d pose) {
-        swerveOdometry.resetPosition(getGyroYaw(), getModulePositions(), pose);
+        m_poseEstimator.resetPosition(getGyroYaw(), getModulePositions(), pose);
     }
 
     public Rotation2d getHeading(){
@@ -105,11 +119,11 @@ public class Swerve extends SubsystemBase {
     }
 
     public void setHeading(Rotation2d heading){
-        swerveOdometry.resetPosition(getGyroYaw(), getModulePositions(), new Pose2d(getPose().getTranslation(), heading));
+        m_poseEstimator.resetPosition(getGyroYaw(), getModulePositions(), new Pose2d(getPose().getTranslation(), heading));
     }
 
     public void zeroHeading(){
-        swerveOdometry.resetPosition(getGyroYaw(), getModulePositions(), new Pose2d(getPose().getTranslation(), new Rotation2d()));
+        m_poseEstimator.resetPosition(getGyroYaw(), getModulePositions(), new Pose2d(getPose().getTranslation(), new Rotation2d()));
     }
 
     public Rotation2d getGyroYaw() {
@@ -139,7 +153,7 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic(){
-        swerveOdometry.update(getGyroYaw(), getModulePositions());
+        m_poseEstimator.update(getGyroYaw(), getModulePositions());
 
         m_field.setRobotPose(getPose());
 
