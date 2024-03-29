@@ -18,6 +18,7 @@ import frc.robot.commands.SetWrist2PercentSpeed;
 import frc.robot.commands.ShoulderGoToPosition;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.Wrist2GoToPosition;
+import frc.robot.subsystems.ApriltagCamera;
 import frc.robot.subsystems.BeamBreakSensor;
 import frc.robot.subsystems.ClimberServo;
 import frc.robot.subsystems.CollectorRoller;
@@ -55,6 +56,11 @@ public class RobotContainer {
       TuningVariables.useArmController.getBoolean() 
         ? new XboxController(TuningVariables.useDriveController.getBoolean() ? 1 : 0)
         : null;
+    private final ApriltagCamera m_apriltagCamera = new ApriltagCamera(
+        "Apriltag Camera", // name from photonvision GUI
+        25,  // TODO: make these match camera mount on the robot
+        1.45,
+        20);
 
     /* Drive Controls */
     private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -129,6 +135,7 @@ public class RobotContainer {
 
         // Configure the button bindings
         configureButtonBindings();
+        m_apriltagCamera.addPositionListener(s_Swerve);
         SmartDashboard.putData("Remove all preferences", new InstantCommand(TuningVariables::removeAllPreferences)); 
         SmartDashboard.putData("Set All TuningVariables to default values", new InstantCommand(TuningVariables::setAllToDefaultValues)); 
     }

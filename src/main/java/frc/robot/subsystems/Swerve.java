@@ -3,10 +3,16 @@ package frc.robot.subsystems;
 import frc.robot.SwerveModule;
 import frc.robot.TuningVariables;
 import frc.robot.Constants;
+import frc.robot.PositionListener;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 //import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
+
+import java.util.Optional;
+
+import org.photonvision.EstimatedRobotPose;
+
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 
 //import com.ctre.phoenix6.configs.Pigeon2Configuration;
@@ -21,7 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Swerve extends SubsystemBase {
+public class Swerve extends SubsystemBase implements PositionListener {
     private SwerveDrivePoseEstimator m_poseEstimator;
     public SwerveModule[] mSwerveMods;
     private boolean m_usePigeon = false;
@@ -162,6 +168,16 @@ public class Swerve extends SubsystemBase {
      */
     public void addVisionMeasurement(Pose2d visionRobotPoseMeters, double timestampSeconds){
         m_poseEstimator.addVisionMeasurement(visionRobotPoseMeters, timestampSeconds);
+    }
+
+    public void onPositionUpdate(Optional<EstimatedRobotPose> newPositionFromApriltag){
+        if(newPositionFromApriltag.isPresent() && m_poseEstimator != null){
+            EstimatedRobotPose newPose = newPositionFromApriltag.get();
+            System.out.println("New pose from Apriltags: " + newPose.estimatedPose + " at " + newPose.timestampSeconds + " s.");
+            addVisionMeasurement(newPose.estimatedPose.toPose2d(), newPose.timestampSeconds);
+            // For some reason, Eagle-Eyed used just setPose(newPose.estimatedPose.toPose2d()),
+            // apparently ignoring the timestamp.
+        }
     }
 
     @Override
