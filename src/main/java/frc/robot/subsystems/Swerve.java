@@ -151,6 +151,19 @@ public class Swerve extends SubsystemBase {
         setModuleStates(m_states);
     }
 
+    /**
+     * Update pose estimate with pose derived from camera
+     * @param visionRobotPoseMeters - The pose of the robot as measured by the vision camera.
+     * @param timestampSeconds - The timestamp of the vision measurement in seconds.
+     * Note that if you don't use your own time source by calling updateWithTime(double,Rotation2d,WheelPositions)
+     * then you must use a timestamp with an epoch since FPGA startup (i.e., the epoch of this timestamp
+     * is the same epoch as Timer.getFPGATimestamp().) This means that you should use Timer.getFPGATimestamp()
+     * as your time source or sync the epochs.
+     */
+    public void addVisionMeasurement(Pose2d visionRobotPoseMeters, double timestampSeconds){
+        m_poseEstimator.addVisionMeasurement(visionRobotPoseMeters, timestampSeconds);
+    }
+
     @Override
     public void periodic(){
         m_poseEstimator.update(getGyroYaw(), getModulePositions());
