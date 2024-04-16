@@ -177,6 +177,8 @@ public class Swerve extends SubsystemBase implements PositionListener {
             addVisionMeasurement(newPose.estimatedPose.toPose2d(), newPose.timestampSeconds);
             // For some reason, Eagle-Eyed used just setPose(newPose.estimatedPose.toPose2d()),
             // apparently ignoring the timestamp.
+            // Also, see https://www.chiefdelphi.com/t/odometry-not-working-only-during-matches/460307
+            // for info on when the times on the coprocessor and the Roborio may be out of sync.
         }
     }
 
