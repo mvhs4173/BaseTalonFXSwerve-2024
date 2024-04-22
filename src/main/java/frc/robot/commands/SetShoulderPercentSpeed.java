@@ -46,7 +46,7 @@ public class SetShoulderPercentSpeed extends Command {
   @Override
   public void initialize() {
     System.out.println("setting shoulder percent speed to " + m_percentSpeed);
-    m_shoulder.getSparkMaxMotor().setPercentSpeed(m_percentSpeed);
+    m_shoulder.setPercentSpeed(m_percentSpeed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -64,7 +64,7 @@ public class SetShoulderPercentSpeed extends Command {
 
   void stop(){
     System.out.println("stopping shoulder motor");
-    m_shoulder.getSparkMaxMotor().setRPM(0.0);
+    m_shoulder.setRPM(0.0);
   }
 
   // Called once the command ends or is interrupted.

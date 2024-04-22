@@ -42,7 +42,7 @@ public class SetShoulderRPM extends Command {
   @Override
   public void initialize() {
     System.out.println("setting shoulder speed to " + m_RPM + " RPM");
-    m_shoulder.getSparkMaxMotor().setRPM(m_RPM);
+    m_shoulder.setRPM(m_RPM);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -63,7 +63,7 @@ public class SetShoulderRPM extends Command {
   public void end(boolean interrupted) {
     System.out.println("stopping shoulder motor");
     m_shoulder.getSparkMaxMotor().enableSoftLimits();
-    m_shoulder.getSparkMaxMotor().setRPM(0.0);
+    m_shoulder.setRPM(0.0);
   }
 
   // Returns true when the command should end.

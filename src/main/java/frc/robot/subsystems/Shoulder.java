@@ -13,14 +13,14 @@ public class Shoulder extends SubsystemBase {
   private final SparkMaxMotor m_leftMotor = new SparkMaxMotor(Constants.ShoulderConstants.Left.kCANId,
     Constants.ShoulderConstants.encoderRotationsPerFinalRotation,
     Constants.ShoulderConstants.Left.kName);
-  private final SparkMaxMotor m_rightMotor = new SparkMaxMotor(Constants.ShoulderConstants.Right.kCANId,
-    Constants.ShoulderConstants.encoderRotationsPerFinalRotation,
-    Constants.ShoulderConstants.Right.kName);
+  //private final SparkMaxMotor m_rightMotor = new SparkMaxMotor(Constants.ShoulderConstants.Right.kCANId,
+   // Constants.ShoulderConstants.encoderRotationsPerFinalRotation,
+    //Constants.ShoulderConstants.Right.kName);
   /** Creates a new Shoulder. */
   public Shoulder() {
     m_leftMotor.setToBrakeOnIdle(true);
-    m_rightMotor.setToBrakeOnIdle(true);
-    m_leftMotor.addFollower(m_rightMotor, true);
+    //m_rightMotor.setToBrakeOnIdle(true);
+   // m_leftMotor.addFollower(m_rightMotor, true);
     m_leftMotor.setPIDCoefficients(Constants.ShoulderConstants.PID.kP,
        Constants.ShoulderConstants.PID.kI,
        Constants.ShoulderConstants.PID.kD,
@@ -33,15 +33,16 @@ public class Shoulder extends SubsystemBase {
   }
 
   public SparkMaxMotor getSparkMaxMotor(){
+    System.out.println("Please don't call shoulder.getsparkmaxmotor");
     return m_leftMotor;
   }
 
   public void setRPM(double RPM){
-    m_leftMotor.setRPM(RPM);
+    //m_leftMotor.setRPM(RPM);
   }
 
   public void setPercentSpeed(double percentSpeed){
-    m_leftMotor.setPercentSpeed(percentSpeed);
+    //m_leftMotor.setPercentSpeed(percentSpeed);
   }
 
   public void holdPosition(){

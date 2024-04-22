@@ -87,9 +87,9 @@ public final class Constants {
 
         /* Swerve Profiling Values */
         /** Meters per Second */
-        public static final double maxSpeed = 0.5; //TODO: This must be tuned to specific robot
+        public static final double maxSpeed = 2.0; //TODO: This must be tuned to specific robot
         /** Radians per Second */
-        public static final double maxAngularVelocity = 1.25; //TODO: This must be tuned to specific robot
+        public static final double maxAngularVelocity = 2.5; //TODO: This must be tuned to specific robot
 
         /* Neutral Modes */
         public static final NeutralModeValue angleNeutralMode = NeutralModeValue.Coast;

@@ -171,7 +171,7 @@ public class RobotContainer {
         JoystickButton armLeftBumper = new JoystickButton(m_armController, XboxController.Button.kLeftBumper.value);
         JoystickButton armRightBumper = new JoystickButton(m_armController, XboxController.Button.kRightBumper.value);
         JoystickButton armStart = new JoystickButton(m_armController, XboxController.Button.kStart.value);
-        JoystickButton armBack = new JoystickButton(m_armController, XboxController.Button.kBack.value);
+        JoystickButton armBack = null; //new JoystickButton(m_armController, XboxController.Button.kBack.value);
         JoystickButton armRightStick = new JoystickButton(m_armController, XboxController.Button.kRightStick.value);
 
         Trigger armLeftTrigger = new Trigger(() -> m_armController.getLeftTriggerAxis() > 0.5 );
@@ -200,15 +200,15 @@ public class RobotContainer {
         // bottom sectors of POV are for climbing.  SW is weakest (use for engaging the chain),
         // S can raise robot on hook two (from the top), SE can raise robot on topmost hook.
         // All will raise as long as button is pressed.
-        new Trigger (() -> m_armController.getPOV() == 225)
-          .whileTrue(new SetShoulderRPM(m_shoulder, 5.0));
-        new Trigger(() -> m_armController.getPOV() == 180)
-          .whileTrue(new SetShoulderRPM(m_shoulder, 10.0));
-        new Trigger (() -> m_armController.getPOV()== 135)
-          .whileTrue(new SetShoulderRPM(m_shoulder,13.0));
+       // new Trigger (() -> m_armController.getPOV() == 225)
+        //  .whileTrue(new SetShoulderRPM(m_shoulder, 5.0));
+        //new Trigger(() -> m_armController.getPOV() == 180)
+       //   .whileTrue(new SetShoulderRPM(m_shoulder, 10.0));
+       // new Trigger (() -> m_armController.getPOV()== 135)
+        //  .whileTrue(new SetShoulderRPM(m_shoulder,13.0));
         // depressing top of POV engages ratchet - cannot be undone 
-        new Trigger(() -> m_armController.getPOV() == 0)
-          .onTrue(new InstantCommand(() -> m_climberServo.setAngle(60)));
+       // new Trigger(() -> m_armController.getPOV() == 0)
+        //  .onTrue(new InstantCommand(() -> m_climberServo.setAngle(60)));
 
         // Now for manual control of arm and wrist
         // While left joystick is pushed forward, shoulder goes up at constant speed
@@ -225,9 +225,9 @@ public class RobotContainer {
           .whileTrue(new SetWrist2PercentSpeed(m_wrist2, -0.04, armBack));
         // press right stick button to hold wrist at current position
         armRightStick.onTrue(new InstantCommand(m_wrist2::holdPosition, m_wrist2));
-        armStart.onTrue(
-            new InstantCommand(() -> m_wrist2.setCurrentPositionAsZeroEncoderPosition())
-            .andThen(new InstantCommand(() -> m_shoulder.setCurrentPositionAsZeroEncoderPosition())));
+        //armStart.onTrue(
+            //new InstantCommand(() -> m_wrist2.setCurrentPositionAsZeroEncoderPosition())
+           // .andThen(new InstantCommand(() -> m_shoulder.setCurrentPositionAsZeroEncoderPosition())));
     }
 
     /**
@@ -237,6 +237,7 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An ExampleCommand will run in autonomous
-        return m_chooser.getSelected();
+        //return m_chooser.getSelected();
+        return null;
     }
   }
