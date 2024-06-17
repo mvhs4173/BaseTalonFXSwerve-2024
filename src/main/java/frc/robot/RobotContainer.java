@@ -56,11 +56,12 @@ public class RobotContainer {
       TuningVariables.useArmController.getBoolean() 
         ? new XboxController(TuningVariables.useDriveController.getBoolean() ? 1 : 0)
         : null;
-    private final ApriltagCamera m_apriltagCamera = new ApriltagCamera(
-        "Apriltag Camera", // name from photonvision GUI
-        25,  // TODO: make these match camera mount on the robot
-        1.45,
-        20);
+    private final ApriltagCamera m_apriltagCamera = null;
+    //new ApriltagCamera(
+        //"Apriltag Camera", // name from photonvision GUI
+       // 25,  // TODO: make these match camera mount on the robot
+        //1.45,
+        //20);
 
     /* Drive Controls */
     private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -135,7 +136,9 @@ public class RobotContainer {
 
         // Configure the button bindings
         configureButtonBindings();
-        m_apriltagCamera.addPositionListener(s_Swerve);
+        if (m_apriltagCamera != null){
+          m_apriltagCamera.addPositionListener(s_Swerve);
+        }
         SmartDashboard.putData("Remove all preferences", new InstantCommand(TuningVariables::removeAllPreferences)); 
         SmartDashboard.putData("Set All TuningVariables to default values", new InstantCommand(TuningVariables::setAllToDefaultValues)); 
     }
@@ -143,7 +146,7 @@ public class RobotContainer {
     private void registerNamedPathPlannerCommands(){
       //PathPlanner autos use "named commands", which must be registered
       Command goToAmpShotPosition = new ParallelCommandGroup(
-        new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 10.0, -0.185),
+        new ShoulderGoToPosition(m_shoulder, ShoulderGoToPosition.Method.kRPM, 10.0, -0.246),
         new Wrist2GoToPosition(m_wrist2, 0.06, 0.23)
       ).withTimeout(7.0);
       Command shoot2ForAmp = m_shooter2.shoot2ForAmpCommand();

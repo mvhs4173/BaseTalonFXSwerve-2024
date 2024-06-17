@@ -184,9 +184,9 @@ public final class Constants {
      */
     public static final class ShoulderConstants {
         public static final MotorType kMotorType = MotorType.kBrushless;
-        public static final double encoderRotationsPerFinalRotation = 140.0;
-        public static final double lowerSoftLimit = -0.222; // in revolutions of shoulder
-        public static final double upperSoftLimit = 0.01;
+        public static final double encoderRotationsPerFinalRotation = 105.0;
+        public static final double lowerSoftLimit = -0.296; // in revolutions of shoulder
+        public static final double upperSoftLimit = 0.013;
         public static final class Left{
             public static final int kCANId = 52;
             public static final String kName = "Left Shoulder";
