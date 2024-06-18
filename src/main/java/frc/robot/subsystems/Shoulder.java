@@ -16,6 +16,7 @@ public class Shoulder extends SubsystemBase {
   private final SparkMaxMotor m_rightMotor = new SparkMaxMotor(Constants.ShoulderConstants.Right.kCANId,
     Constants.ShoulderConstants.encoderRotationsPerFinalRotation,
     Constants.ShoulderConstants.Right.kName);
+  private double m_positionAtHorizontal = -0.042177;
   /** Creates a new Shoulder. */
   public Shoulder() {
     m_leftMotor.setToBrakeOnIdle(true);
@@ -51,14 +52,25 @@ public class Shoulder extends SubsystemBase {
   public void setCurrentPositionAsZeroEncoderPosition(){
     m_leftMotor.setCurrentPositionAsZeroEncoderPosition();
   }
-
+/**
+ * 
+ * @return position in rotations clockwise from start position (when looking from left).
+ */
   public double getPosition(){
     return m_leftMotor.getPosition();
+  }
+
+  /**
+   * @return position in degrees clockwise from horizontal (when looking from left).
+   */
+  public double getPositionDegreesFromHorizontal(){
+    return (getPosition()-m_positionAtHorizontal)*360;
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Shoulder Position", getPosition());
+    SmartDashboard.putNumber("Shoulder Position Degrees from Horizontal", getPositionDegreesFromHorizontal());
   } 
 }
