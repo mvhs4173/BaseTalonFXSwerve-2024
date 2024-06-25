@@ -4,9 +4,11 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import edu.wpi.first.math.util.Units;
 
 public class Shoulder extends SubsystemBase {
   // left motor will be the main motor: the right will follow it.  Do not set speed on right one.
@@ -17,6 +19,14 @@ public class Shoulder extends SubsystemBase {
     Constants.ShoulderConstants.encoderRotationsPerFinalRotation,
     Constants.ShoulderConstants.Right.kName);
   private double m_positionAtHorizontal = -0.042177;
+  //things related to feedforward for the arm
+  private static class FfConstants{
+    public static double kS = 0.0;
+    public static double kG = 0.56;
+    public static double kV = 2.05;
+    public static double kA = 0.02;
+  };
+  ArmFeedforward m_feedforward= new ArmFeedforward(FfConstants.kS, FfConstants.kG, FfConstants.kV, FfConstants.kA);
   /** Creates a new Shoulder. */
   public Shoulder() {
     m_leftMotor.setToBrakeOnIdle(true);
@@ -31,6 +41,7 @@ public class Shoulder extends SubsystemBase {
        Constants.ShoulderConstants.PID.kMaxOutput);
     m_leftMotor.setAndEnableLowerSoftLimit(Constants.ShoulderConstants.lowerSoftLimit);
     m_leftMotor.setAndEnableUpperSoftLimit(Constants.ShoulderConstants.upperSoftLimit);
+
   }
 
   public SparkMaxMotor getSparkMaxMotor(){
@@ -43,6 +54,10 @@ public class Shoulder extends SubsystemBase {
 
   public void setPercentSpeed(double percentSpeed){
     m_leftMotor.setPercentSpeed(percentSpeed);
+  }
+
+  public void setVoltage(double voltage){
+    m_leftMotor.setVoltage(voltage);
   }
 
   public void holdPosition(){
@@ -64,7 +79,17 @@ public class Shoulder extends SubsystemBase {
    * @return position in degrees clockwise from horizontal (when looking from left).
    */
   public double getPositionDegreesFromHorizontal(){
-    return (getPosition()-m_positionAtHorizontal)*360;
+    return getPositionRotationsFromHorizontal()*360;
+  }
+  /**
+   * 
+   * @return position in rotations clockwise from horizontal (when looking from left)
+   */
+  public double getPositionRotationsFromHorizontal(){
+    return getPosition()-m_positionAtHorizontal;
+  }
+  public double getPositionRadiansFromHorizontal(){
+    return getPositionRotationsFromHorizontal()*2.0*Math.PI;
   }
 
   @Override
@@ -72,5 +97,7 @@ public class Shoulder extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Shoulder Position", getPosition());
     SmartDashboard.putNumber("Shoulder Position Degrees from Horizontal", getPositionDegreesFromHorizontal());
+    double voltage = m_feedforward.calculate(getPositionRadiansFromHorizontal(), Units.rotationsToRadians(0.9), 0.0);
+    SmartDashboard.putNumber("Voltage", voltage);
   } 
 }
