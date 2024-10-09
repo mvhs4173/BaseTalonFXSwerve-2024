@@ -220,7 +220,7 @@ public class RobotContainer {
           .whileTrue(new SetShoulderRPM(m_shoulder, 3.0, armBack));
         // Right joystick controls wrist in similar way
         new Trigger(() -> m_armController.getRightY() < -0.5)
-          .whileTrue(new SetWrist2PercentSpeed(m_wrist2, 0.05, armBack));
+          .whileTrue(new SetWrist2PercentSpeed(m_wrist2, 0.25, armBack));
         new Trigger(() -> m_armController.getRightY() > 0.5)
           .whileTrue(new SetWrist2PercentSpeed(m_wrist2, -0.04, armBack));
         // press right stick button to hold wrist at current position
