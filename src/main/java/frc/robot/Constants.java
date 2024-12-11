@@ -257,7 +257,7 @@ public final class Constants {
 
     public static class Shooter2Constants{
         public static class UpperRoller{ // a NEO
-            public static final int kCANId = 41;
+            public static final int kCANId = 48; // was 41 (dup of fr cancoder) until 2024-12-10
             public static final MotorType kMotorType = MotorType.kBrushless;
             public static final double encoderRotationsPerFinalRotation = 1.0;
             public static final String name = "Upper Shooter2 Roller";

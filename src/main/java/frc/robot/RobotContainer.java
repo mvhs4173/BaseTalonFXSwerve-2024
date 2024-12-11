@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.autos.parkAuto;
+import frc.robot.commands.AimAtAprilTag;
 import frc.robot.commands.SetShoulderRPM;
 import frc.robot.commands.SetWrist2PercentSpeed;
 import frc.robot.commands.ShoulderGoToPosition;
@@ -24,6 +25,7 @@ import frc.robot.subsystems.CollectorRoller;
 import frc.robot.subsystems.Shooter2;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Wrist2;
 
 /* Auto Commands */
@@ -74,7 +76,7 @@ public class RobotContainer {
     private final BeamBreakSensor m_BeamBreakSensor = new BeamBreakSensor();
     private final CollectorRoller m_CollectorRoller = TuningVariables.useCollectorRoller.getBoolean() ? new CollectorRoller() : null;
     private final ClimberServo m_climberServo = new ClimberServo(0);
-
+    private final Vision m_Vision = new Vision("AprilTagCamera");
     /* Autos */
     private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -131,6 +133,7 @@ public class RobotContainer {
         configureButtonBindings();
         SmartDashboard.putData("Remove all preferences", new InstantCommand(TuningVariables::removeAllPreferences)); 
         SmartDashboard.putData("Set All TuningVariables to default values", new InstantCommand(TuningVariables::setAllToDefaultValues)); 
+        SmartDashboard.putData(m_Vision);
     }
 
     private void registerNamedPathPlannerCommands(){
@@ -173,6 +176,7 @@ public class RobotContainer {
         JoystickButton armStart = new JoystickButton(m_armController, XboxController.Button.kStart.value);
         JoystickButton armBack = new JoystickButton(m_armController, XboxController.Button.kBack.value);
         JoystickButton armRightStick = new JoystickButton(m_armController, XboxController.Button.kRightStick.value);
+        JoystickButton driveA = new JoystickButton(m_driveController, XboxController.Button.kA.value);
 
         Trigger armLeftTrigger = new Trigger(() -> m_armController.getLeftTriggerAxis() > 0.5 );
         Trigger armRightTrigger = new Trigger(() -> m_armController.getRightTriggerAxis() > 0.5);
@@ -193,7 +197,8 @@ public class RobotContainer {
         armLeftTrigger.whileTrue(new goToAmpShotPosition(m_shoulder, m_wrist2));
         armLeftTrigger.onFalse(new goToCollectionPositionFromAmp(m_shoulder, m_wrist2));
         armRightTrigger.whileTrue(shootForAmp);
-
+        
+        driveA.whileTrue(new AimAtAprilTag(m_Vision, s_Swerve, 14, 1)); //allow 1 degree of error
         // Now for climbing control.  Climbing requires much more power in shoulder than shooting does.
         // Y button, while held down, causes arm to rise to vertical.
         armY.whileTrue(new goToClimbPosition(m_shoulder, m_wrist2));
